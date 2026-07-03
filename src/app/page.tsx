@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import QuickSave from "@/components/QuickSave";
 import NearbyExplore from "@/components/NearbyExplore";
+import MockMap from "@/components/MockMap";
 import ListCard from "@/components/ListCard";
 import WaitlistForm from "@/components/WaitlistForm";
 import { categoryEmoji } from "@/lib/constants";
@@ -15,6 +16,8 @@ export default function Home() {
   const { t } = useI18n();
   const [places, setPlaces] = useState<Place[]>([]);
   const [lists, setLists] = useState<PlaceList[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   const refresh = useCallback(() => {
     setPlaces(placesRepo.list());
@@ -25,19 +28,41 @@ export default function Home() {
     refresh();
   }, [refresh]);
 
+  // 저장 직후: 목록 갱신 + 방금 저장한 핀을 지도에서 선택
+  function handleSaved(place: Place) {
+    refresh();
+    setSelectedId(place.id);
+  }
+
+  // "지도에서 보기": 핀 선택 + 지도로 스크롤
+  function handleViewOnMap(place: Place) {
+    setSelectedId(place.id);
+    mapRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   const recent = [...places]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .slice(0, 4);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-6">
-      {/* 1. Save-first: 빠른 저장 */}
-      <QuickSave onSaved={refresh} />
+      {/* 1. Save-first 빠른 저장 */}
+      <QuickSave onSaved={handleSaved} onViewOnMap={handleViewOnMap} />
 
-      {/* 2. 주변 발견 (mock) */}
-      <NearbyExplore onSaved={refresh} />
+      {/* 2. 내 한국 지도 (목업) */}
+      <section ref={mapRef}>
+        <h2 className="mb-3 text-lg font-extrabold">{t.home.mapTitle}</h2>
+        <MockMap
+          places={places}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
+      </section>
 
-      {/* 3. 최근 저장 */}
+      {/* 3. 한국 둘러보기 (mock) */}
+      <NearbyExplore onSaved={handleSaved} />
+
+      {/* 4. 최근 저장 */}
       {recent.length > 0 && (
         <section>
           <div className="flex items-center justify-between">
@@ -51,10 +76,10 @@ export default function Home() {
           </div>
           <div className="mt-3 flex flex-col gap-2">
             {recent.map((p) => (
-              <Link
+              <button
                 key={p.id}
-                href="/places"
-                className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-card transition hover:bg-muted"
+                onClick={() => handleViewOnMap(p)}
+                className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 text-left shadow-card transition hover:bg-muted"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-lg">
                   {categoryEmoji(p.category)}
@@ -72,13 +97,13 @@ export default function Home() {
                 <span className="shrink-0 text-xs text-muted-foreground">
                   {t.categories[p.category]}
                 </span>
-              </Link>
+              </button>
             ))}
           </div>
         </section>
       )}
 
-      {/* 4. 리스트 미리보기 */}
+      {/* 5. 컬렉션 미리보기 */}
       <section>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-extrabold">{t.home.listsTitle}</h2>
@@ -105,14 +130,14 @@ export default function Home() {
           <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
             {lists.slice(0, 6).map((l) => (
               <div key={l.id} className="w-64 shrink-0">
-                <ListCard list={l} />
+                <ListCard list={l} places={places} />
               </div>
             ))}
           </div>
         )}
       </section>
 
-      {/* 5. 얇은 waitlist (early access) */}
+      {/* 6. 얇은 waitlist */}
       <section className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-muted/40 p-5 text-center">
         <h2 className="text-base font-bold">{t.landing.notifyMe}</h2>
         <WaitlistForm />

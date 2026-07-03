@@ -1,15 +1,27 @@
 # HotPlace MVP
 
-해외 거주 한국인 / 유학생 / 커플을 위한 "한국 핫플 저장 & 공유" 웹앱 MVP.
+**HotPlace = 한국에서 가보고 싶은 모든 장소를 담는 하나의 개인 지도.**
 
-인스타/틱톡에서 본 한국 핫플을 링크나 텍스트로 저장하고, 카테고리·지역별로
-정리하고, 나중에는 친구·연인과 리스트로 공유할 수 있게 만드는 것이 목표입니다.
+> 릴스에서 본 핫플부터 지도앱 링크까지, 한국에서 가보고 싶은 장소를 한 지도에 모아두는 앱.
+> (EN) Save every Korea place you find — from Reels, map links, and recommendations — into one map.
+
+오랜만에 한국 가는 사람은 요즘 뭐가 좋은지 알기 어렵고, 발견한 장소는 인스타/틱톡/
+네이버·카카오·구글·애플 지도/메시지/블로그에 흩어져 있습니다. HotPlace는 그것들을
+붙여넣기 한 번으로 **내 한국 지도**에 모으고, 카테고리·지역·컬렉션으로 정리하고,
+여행/데이트 코스로 이어주는 것을 목표로 합니다. (AI 여행 플래너가 아니라 지도 중심의
+"저장한 장소" 앱)
 
 ## 현재 상태 (Step 1~4 완료)
 
 - [x] Next.js 14 + TypeScript + Tailwind CSS 프로젝트 세팅
-- [x] **Home = save-first 대시보드**: 상단 빠른 저장(붙여넣기→최소 확인→저장,
-      progressive disclosure) + 주변 둘러보기(mock) + 최근 저장 + 리스트 미리보기
+- [x] **Home = map-first 대시보드**: 빠른 저장(붙여넣기→출처 감지→최소 확인→저장) +
+      **목업 지도(저장 장소를 핀으로 표시, 핀 선택 시 상세)** + 한국 둘러보기 +
+      최근 저장 + 컬렉션 미리보기. "내 한국 지도" 포지셔닝
+- [x] **출처 자동 감지(로컬)**: 붙여넣은 값이 Google/Apple/Naver/Kakao 지도,
+      Instagram/Reels, TikTok, 웹 링크, 일반 텍스트 중 무엇인지 URL 패턴으로 구분
+      (`lib/source.ts`, API 호출 없음). URL이면 원본 링크 자동 채움
+- [x] **목업 지도**: 실제 지도 API 없이 `lib/mockMap.ts`가 place.id 해시로 핀 좌표
+      생성. 나중에 좌표→투영으로 교체 가능
 - [x] **주변 둘러보기**: 브라우저 Geolocation(무료)만 사용, 지역칩(서울/성수/홍대/
       강남/한남/제주/부산)별 mock 장소를 Save. 실제 검색 API는 `lib/nearby.ts`에서
       교체 가능하게 분리 (지금은 유료 API 미사용)
@@ -34,6 +46,11 @@
 지금은 **회원가입도 없고, 서버 DB도 없습니다.** 모든 데이터는 브라우저의
 localStorage에만 저장되는 "익명 사용자 1인용 프로토타입" 단계로, UX 흐름을
 빠르게 검증하기 위한 것입니다.
+
+의도된 한계 (베타 기준):
+- 지도는 **미리보기(mock)** — 핀 위치가 지리적으로 정확하지 않음 (UI에 작은 배지로 안내)
+- 장소는 붙여넣은 링크/이름을 **한 건씩 저장** — 구글/네이버/카카오에 저장해둔
+  리스트를 통째로 가져오는 bulk import는 아직 없음 (향후 확장)
 
 ## 기술 스택 (전부 무료 티어)
 
@@ -71,8 +88,10 @@ hotplace-mvp/
       Footer.tsx               # 피드백 CTA + 베타 안내
       LanguageSwitcher.tsx
       ThemeProvider.tsx / ThemeToggle.tsx   # 라이트/다크
-      QuickSave.tsx            # Home 빠른 저장 (붙여넣기→확인→저장)
-      NearbyExplore.tsx        # 주변 둘러보기 (Geolocation + 지역칩 + mock)
+      QuickSave.tsx            # Home 빠른 저장 (붙여넣기→출처감지→확인→지도 저장)
+      MockMap.tsx              # 목업 지도 (핀 + 선택 상세) — 실제 지도 API 없음
+      SaveFromAnywhere.tsx     # "어디서든 저장" 3단계 안내
+      NearbyExplore.tsx        # 한국 둘러보기 (Geolocation + 지역칩 + mock)
       WaitlistForm.tsx
       PlaceForm.tsx           # 장소 추가/수정 공용 폼 (이름만 필수 + chip + 접기)
       PlaceCard.tsx            # 액션 유연 (삭제 / 리스트에서 빼기 / 보기 전용)
@@ -91,7 +110,9 @@ hotplace-mvp/
     lib/
       types.ts                # Place, PlaceList 등 타입 (Supabase 스키마와 1:1 대응)
       constants.ts             # 카테고리 목록 + 색상
-      nearby.ts                # 주변 mock 제공자 (실제 검색 API 교체 지점)
+      nearby.ts                # 한국 둘러보기 mock 제공자 (실제 검색 API 교체 지점)
+      source.ts                # 붙여넣기 출처 감지 (지도앱/소셜, API 없음)
+      mockMap.ts               # place.id → 목업 지도 핀 좌표
       config.ts                # FEEDBACK_FORM_URL 등 교체 가능한 링크
       storage.ts                # localStorage 기반 데이터 저장소 (나중에 Supabase로 교체)
       mapLinks.ts                # Google/Naver/Kakao 지도 검색 링크 생성

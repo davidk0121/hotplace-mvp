@@ -3,17 +3,19 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ListCard from "@/components/ListCard";
-import { listsRepo } from "@/lib/storage";
-import { PlaceList } from "@/lib/types";
+import { listsRepo, placesRepo } from "@/lib/storage";
+import { Place, PlaceList } from "@/lib/types";
 import { useI18n } from "@/i18n/I18nProvider";
 
 export default function ListsPage() {
   const { t } = useI18n();
   const [lists, setLists] = useState<PlaceList[]>([]);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLists(listsRepo.list());
+    setPlaces(placesRepo.list());
     setLoaded(true);
   }, []);
 
@@ -47,7 +49,7 @@ export default function ListsPage() {
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {lists.map((list) => (
-          <ListCard key={list.id} list={list} />
+          <ListCard key={list.id} list={list} places={places} />
         ))}
       </div>
     </div>

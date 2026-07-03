@@ -10,9 +10,14 @@ import {
   NearbyPlace,
 } from "@/lib/nearby";
 import { placesRepo } from "@/lib/storage";
+import { Place } from "@/lib/types";
 import { useI18n } from "@/i18n/I18nProvider";
 
-export default function NearbyExplore({ onSaved }: { onSaved?: () => void }) {
+export default function NearbyExplore({
+  onSaved,
+}: {
+  onSaved?: (place: Place) => void;
+}) {
   const { t } = useI18n();
   // 기본은 Seoul을 보여줘 바로 발견/저장할 거리가 있게 한다.
   const [area, setArea] = useState<AreaKey>("seoul");
@@ -56,7 +61,7 @@ export default function NearbyExplore({ onSaved }: { onSaved?: () => void }) {
   }
 
   function handleSave(p: NearbyPlace) {
-    placesRepo.create({
+    const place = placesRepo.create({
       name: p.name,
       region: p.region,
       category: p.category,
@@ -64,7 +69,7 @@ export default function NearbyExplore({ onSaved }: { onSaved?: () => void }) {
       originalInput: p.name,
     });
     setSavedKeys((prev) => new Set(prev).add(keyOf(p)));
-    onSaved?.();
+    onSaved?.(place);
   }
 
   return (
