@@ -25,9 +25,6 @@ export default function NewPlacePage() {
         {t.newPlace.back}
       </Link>
       <h1 className="mt-2 text-2xl font-extrabold">{t.newPlace.title}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {t.newPlace.subtitle}
-      </p>
       <div className="mt-6">
         <PlaceForm submitLabel={t.newPlace.submit} onSubmit={handleSubmit} />
       </div>

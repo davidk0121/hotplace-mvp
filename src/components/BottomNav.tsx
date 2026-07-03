@@ -11,9 +11,10 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   const tabs = [
-    { href: "/", icon: "🧭", label: t.nav.home },
+    { href: "/", icon: "🏠", label: t.nav.home },
     { href: "/places", icon: "📍", label: t.nav.myPlaces },
     { href: "/lists", icon: "🗂️", label: t.nav.myLists },
+    { href: "/plan", icon: "🗺️", label: t.nav.plan },
   ];
 
   function isActive(href: string) {

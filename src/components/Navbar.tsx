@@ -13,6 +13,7 @@ export default function Navbar() {
   const links = [
     { href: "/places", label: t.nav.myPlaces },
     { href: "/lists", label: t.nav.myLists },
+    { href: "/plan", label: t.nav.plan },
   ];
 
   return (
