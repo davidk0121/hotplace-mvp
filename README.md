@@ -1,36 +1,195 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HotPlace MVP
 
-## Getting Started
+해외 거주 한국인 / 유학생 / 커플을 위한 "한국 핫플 저장 & 공유" 웹앱 MVP.
 
-First, run the development server:
+인스타/틱톡에서 본 한국 핫플을 링크나 텍스트로 저장하고, 카테고리·지역별로
+정리하고, 나중에는 친구·연인과 리스트로 공유할 수 있게 만드는 것이 목표입니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 현재 상태 (Step 1~4 완료)
+
+- [x] Next.js 14 + TypeScript + Tailwind CSS 프로젝트 세팅
+- [x] 랜딩페이지 (문제 설명, 타겟 유저, Waitlist 폼, 데모 체험 버튼)
+- [x] 장소 저장 / 목록 / 수정 / 삭제 (localStorage, anonymous 사용자)
+- [x] 카테고리 필터, Google/Naver/Kakao Map 검색 링크 열기
+- [x] i18n: English(기본) / 한국어, 언어 스위처, 선택 언어 localStorage 저장
+- [x] 공유 리스트: 리스트 생성/수정/삭제, 목적 태그, 장소 추가/제거(bottom sheet),
+      mock 공유 링크 복사, 보기 전용 공유 페이지 (`/lists/share/[shareId]`)
+- [x] 디자인 리뉴얼: Figma Make "Travel & Discovery" 참고 — 라이트(크림)/다크
+      테마 토글, coral(#ff385c) 액센트, Onest 폰트, 큰 radius 카드, 카테고리
+      컬러 커버, 모바일 하단 네비. 시맨틱 CSS 토큰(`bg-card`/`text-foreground` 등)
+      기반이라 테마 전환이 클래스 하나(`.dark`)로 처리됨
+- [x] AI Plan (mock): `/plan` 페이지 — 자연어 입력 + 저장 장소를 시간대(오전/
+      점심/오후/저녁) 코스로 배치하는 로컬 mock 생성기(`src/lib/plan.ts`).
+      리스트 상세의 "코스 짜기" 버튼 → `/plan?list=<id>`로 컨텍스트 전달.
+      **실제 AI/OpenAI 호출 없음.** 반환 타입은 향후 `saved_plans` 테이블과 1:1 대응.
+- [ ] Supabase 연결 (스키마는 `supabase/schema.sql`에 준비됨, 아직 미연결)
+- [ ] AI Plan 실제 연동 — `generatePlan()` 내부만 OpenAI 호출로 교체 (비용 발생, 검증 후)
+
+지금은 **회원가입도 없고, 서버 DB도 없습니다.** 모든 데이터는 브라우저의
+localStorage에만 저장되는 "익명 사용자 1인용 프로토타입" 단계로, UX 흐름을
+빠르게 검증하기 위한 것입니다.
+
+## 기술 스택 (전부 무료 티어)
+
+- Frontend: Next.js 14 (App Router) + TypeScript
+- Styling: Tailwind CSS (시맨틱 토큰 + `darkMode: "class"`), 폰트 Onest
+- 데이터(현재): 브라우저 localStorage
+- 데이터(예정): Supabase 무료 티어
+- 배포(예정): Vercel 무료 플랜
+- 지도: 별도 API 없이 Google/Naver/Kakao 지도 "검색 링크"를 새 탭으로 열기만 함
+- AI: 아직 없음 (mock 응답으로 대체 예정)
+
+## 프로젝트 구조
+
+```
+hotplace-mvp/
+  src/
+    app/
+      layout.tsx            # 전체 레이아웃 (Navbar 포함)
+      page.tsx               # 랜딩페이지
+      places/
+        page.tsx              # 장소 리스트 (필터, 카드 그리드)
+        new/page.tsx           # 장소 추가
+        [id]/edit/page.tsx      # 장소 수정
+      lists/
+        page.tsx              # 내 리스트 (카드 그리드)
+        new/page.tsx           # 리스트 만들기
+        [id]/page.tsx           # 리스트 상세 (장소 추가/제거, 공유, AI 버튼)
+        [id]/edit/page.tsx       # 리스트 수정
+        share/[shareId]/page.tsx  # 공유 링크 보기 전용 페이지 (현재는 같은 기기만)
+      plan/
+        page.tsx              # 코스 도우미 (AI Plan mock) — ?list=<id>로 컨텍스트
+    components/
+      Navbar.tsx
+      LanguageSwitcher.tsx
+      WaitlistForm.tsx
+      PlaceForm.tsx           # 장소 추가/수정 공용 폼
+      PlaceCard.tsx            # 액션 유연 (삭제 / 리스트에서 빼기 / 보기 전용)
+      CategoryBadge.tsx
+      ListCard.tsx
+      ListForm.tsx             # 리스트 생성/수정 공용 폼 (목적 태그 선택)
+      AddPlacesSheet.tsx        # 리스트에 장소 추가하는 bottom sheet
+    i18n/
+      config.ts               # 지원 언어 목록 (en, ko / 추후 ja, zh, es)
+      I18nProvider.tsx         # 언어 상태 Context + localStorage 저장
+      locales/
+        en.ts                  # 기본 언어 사전 (Dictionary 타입의 기준)
+        ko.ts                  # 한국어 사전 (en과 같은 구조 강제)
+        index.ts               # 사전 등록부
+    lib/
+      types.ts                # Place, PlaceList 등 타입 (Supabase 스키마와 1:1 대응)
+      constants.ts             # 카테고리 목록
+      storage.ts                # localStorage 기반 데이터 저장소 (나중에 Supabase로 교체)
+      mapLinks.ts                # Google/Naver/Kakao 지도 검색 링크 생성
+      plan.ts                    # 코스 mock 생성기 + GeneratedPlan 타입 (AI 교체 지점)
+  supabase/
+    schema.sql               # Supabase DB 설계 (아직 앱에 연결 안 함)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 새 언어 추가 방법 (예: 일본어)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. `src/i18n/config.ts`의 `locales` 배열에 `"ja"` 추가, `localeNames`에 `ja: "日本語"` 추가
+2. `src/i18n/locales/ja.ts` 생성 — `en.ts`의 `Dictionary` 타입을 import해서 같은 구조로 번역
+   (키가 하나라도 빠지면 컴파일 에러가 나므로 누락 걱정 없음)
+3. `src/i18n/locales/index.ts`의 `dictionaries`에 `ja` 등록
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+이 세 단계 외에 앱 코드는 수정할 필요가 없다. `zh`, `es`도 동일.
 
-## Learn More
+참고: 카테고리는 DB/localStorage에 언어 중립 키(`food`, `cafe`, `date`, ...)로
+저장되고, 화면 라벨만 사전에서 번역된다.
 
-To learn more about Next.js, take a look at the following resources:
+## 로컬 실행 방법
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cd hotplace-mvp
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+브라우저에서 http://localhost:3000 접속.
 
-## Deploy on Vercel
+- Node.js 18.18 이상 필요 (18.20.8 이상 권장)
+- `npm run build` 로 프로덕션 빌드 확인 가능
+- 로컬에서 프로덕션 모드 미리보기: `npm run build && npm start` → http://localhost:3000
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Vercel 배포 (무료)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+이 앱은 **환경변수·유료 API·서버 DB가 전혀 필요 없다.** (100% localStorage)
+그래서 Vercel 무료 플랜에 그대로 올리면 된다.
+
+1. **GitHub에 올리기** — 이 `hotplace-mvp` 폴더가 git 저장소 루트다.
+   ```bash
+   cd hotplace-mvp
+   git add -A
+   git commit -m "HotPlace MVP ready for beta"
+   git branch -M main
+   git remote add origin https://github.com/<본인계정>/<레포이름>.git
+   git push -u origin main
+   ```
+   (`.next`, `node_modules`, `.env*` 등은 `.gitignore`로 자동 제외된다.)
+
+2. **Vercel에서 Import** — [vercel.com](https://vercel.com) 로그인(GitHub 계정) →
+   *Add New… → Project* → 방금 올린 레포 선택.
+
+3. **설정은 전부 기본값 그대로** 두면 된다 (Vercel이 Next.js를 자동 감지):
+   - Framework Preset: **Next.js**
+   - Build Command: `next build` (기본)
+   - Output Directory: `.next` (기본, 건드리지 않음)
+   - Install Command: `npm install` (기본)
+   - Environment Variables: **없음** (비워둠)
+
+4. **Deploy** 클릭 → 1~2분 후 `https://<프로젝트>.vercel.app` 주소가 나온다.
+   이 주소를 지인에게 보내면 된다 (`BETA_TESTING.md` 안내문 참고).
+
+> 나중에 코드를 push 하면 Vercel이 자동으로 재배포한다.
+> Supabase 등을 붙일 때가 되면 그때 Vercel 대시보드의 Environment Variables에
+> `.env.example`의 값들을 추가하면 된다.
+
+## 피드백 링크 설정
+
+`src/lib/config.ts`의 `FEEDBACK_FORM_URL`에 Google Form 링크를 넣으면,
+푸터의 "피드백 남기기" 버튼이 그 폼으로 연결된다. 비워두면 버튼은 그대로
+보이되 "준비 중" 안내가 뜬다. (무료 방식만 사용 — Google Form 권장)
+
+## 데모/리셋 (개발용)
+
+- 빈 My Places 화면의 **"샘플 장소 불러오기"** 버튼으로 예시 데이터를 넣을 수 있다.
+- 브라우저 콘솔에서:
+  - `window.hotplace.seed()` — 샘플 데이터 추가 후 새로고침
+  - `window.hotplace.reset()` — 저장한 장소/리스트 전부 삭제 후 새로고침
+    (이메일/테마/언어 설정은 유지)
+
+## Beta test checklist (지인 테스트용)
+
+> 지인에게 그대로 복사해 보낼 수 있는 **영어/한국어 초대 메시지**는
+> [`BETA_TESTING.md`](./BETA_TESTING.md)에 있다.
+
+지인 3~5명에게 아래 순서로 써보라고 부탁하면 된다. 처음 화면은 비어 있으므로
+직접 저장해보는 것이 핵심이다.
+
+1. **장소 저장** — 지도 링크(네이버/카카오/구글)나 장소 이름을 붙여넣어 저장
+   (예: 인스타에서 본 카페 이름). 이름/지역/카테고리를 정리해본다.
+2. **리스트 만들기** — "서울 데이트 주말" 같은 리스트를 하나 만든다.
+3. **리스트에 장소 담기** — 방금 저장한 장소를 리스트에 추가한다.
+4. **코스 만들기** — 리스트 상세에서 "코스 짜기"를 눌러 하루 코스를 생성해본다.
+5. **공유 링크** — "리스트 공유"로 링크를 복사해본다
+   (지금은 같은 기기에서만 열림 — 안내 문구 확인).
+6. **언어/테마 전환** — 우상단에서 English↔한국어, 라이트↔다크를 바꿔본다.
+7. **피드백** — 화면 하단 "피드백 남기기"로 무엇이 헷갈렸는지 알려준다.
+
+물어볼 것: 첫 화면에서 무슨 앱인지 바로 이해했는지 / 장소 저장이 직관적이었는지 /
+어디서 막혔는지 / 실제로 쓸 것 같은지.
+
+## 다음 단계 우선순위 제안
+
+1. **Supabase 연결** — `supabase/schema.sql` 실행 후, `lib/storage.ts`의
+   localStorage 함수들을 Supabase 클라이언트 호출로 교체. anon_id를
+   쿠키/localStorage에 저장해 "임시 사용자" 구분에 사용. 이 시점에
+   `/lists/share/[shareId]`가 실제 기기 간 공유 링크로 동작하게 된다.
+2. **Supabase Auth 도입** — 익명 사용자 데이터(anon_id)를 로그인한
+   계정(user_id)으로 이관하는 마이그레이션 로직 추가.
+3. **실제 waitlist 이메일 저장** — `waitlist_emails` 테이블에 연결.
+4. **코스 저장/공유** — 지금은 화면에만 표시되는 mock plan을 `saved_plans`
+   테이블에 저장하고 공유할 수 있게 확장.
+5. (비용 발생 가능, 검증 후 진행) `plan.ts`의 `generatePlan()`을 OpenAI API
+   호출로 교체, 지도 API 연동, Instagram/TikTok 링크 미리보기(썸네일) 추출.

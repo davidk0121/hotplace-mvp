@@ -1,0 +1,256 @@
+/**
+ * 기본 언어(English) 사전.
+ * 이 객체의 구조가 Dictionary 타입의 기준이 되므로,
+ * 다른 언어 파일(ko.ts 등)은 반드시 같은 구조를 따라야 한다.
+ */
+export const en = {
+  nav: {
+    home: "Home",
+    myPlaces: "My Places",
+    myLists: "My Lists",
+  },
+  landing: {
+    badge: "For Koreans abroad heading home",
+    heroLine1: "That spot you saw on Reels —",
+    heroLine2: "save it before you lose it",
+    heroDesc:
+      "Living abroad makes it hard to know what's trending in Korea right now. Save the places you discover on Instagram and TikTok, organize them, and build your own Korea hot-place list to share with your partner and friends.",
+    tryDemo: "Start saving places →",
+    notifyMe: "Get launch updates",
+    targetsTitle: "Who we built this for",
+    targets: [
+      {
+        emoji: "✈️",
+        title: "Visiting Korea after a while",
+        desc: "You live overseas and feel out of the loop on what's hot right now.",
+      },
+      {
+        emoji: "🎓",
+        title: "International students",
+        desc: "You want to plan what to do in Korea before the next break.",
+      },
+      {
+        emoji: "💑",
+        title: "Long-distance couples",
+        desc: "You want to plan Korea trips and date courses together.",
+      },
+    ],
+    featuresTitle: "What can you do?",
+    features: [
+      {
+        emoji: "🔗",
+        title: "Save with a link or text",
+        desc: "Paste places you found on Instagram or TikTok as a link or note.",
+      },
+      {
+        emoji: "🗂️",
+        title: "Organize by category & area",
+        desc: "Food, cafes, date spots, travel — everything sorted at a glance.",
+      },
+      {
+        emoji: "👯",
+        title: "Share as lists",
+        desc: "Create lists like \"Jeju trip\" or \"Dates with my girlfriend\" and browse them together.",
+      },
+      {
+        emoji: "🗺️",
+        title: "Open in your map app",
+        desc: "Jump straight to Google, Naver, or Kakao Maps.",
+      },
+    ],
+    waitlistTitle: "Be the first to hear about launch",
+    waitlistDesc:
+      "This is an early test version. Leave your email and we'll let you know when new features ship.",
+  },
+  waitlist: {
+    placeholder: "Enter your email",
+    submit: "Join Waitlist",
+    successTitle: "You're on the list 🎉",
+    success: "We'll email you the moment we launch — no spam, ever.",
+    duplicateTitle: "You're already on the list 🎉",
+    duplicate: "We've got your email — hang tight, launch news is coming.",
+    emailedTo: "Signed up as",
+    invalid: "Please enter a valid email address.",
+  },
+  places: {
+    title: "My Places",
+    subtitle: "Browse your saved Korea hot places by category.",
+    add: "+ Add place",
+    addFirst: "+ Add your first place",
+    all: "All",
+    emptyNone:
+      "Nothing saved yet. Paste an Instagram or TikTok link — or just type a place name — to save your first spot.",
+    emptyCategory: "No places in this category yet.",
+    deleteConfirm: "Delete this place?",
+  },
+  card: {
+    edit: "Edit",
+    delete: "Delete",
+    originalLink: "Original link",
+  },
+  form: {
+    pasteLabel: "Paste a reel, map link, or place name",
+    pastePlaceholder:
+      'e.g. an Instagram reel link, https://naver.me/xxxx, or "Seongsu cafe to try"',
+    pasteHint:
+      "Paste a reel/TikTok link, a map link, or just type a place name. You can tidy up the name, area, and category below.",
+    nameLabel: "Place name",
+    namePlaceholder: "e.g. Onion Seongsu",
+    regionLabel: "Area",
+    regionPlaceholder: "e.g. Seongsu",
+    categoryLabel: "Category",
+    memoLabel: "Notes (optional)",
+    memoPlaceholder: "e.g. Great brunch, expect a queue",
+  },
+  newPlace: {
+    back: "← Back to list",
+    title: "Add a place",
+    subtitle:
+      "Paste a link or text, then tidy up the name, area, and category if needed.",
+    submit: "Save",
+  },
+  editPlace: {
+    back: "← Back to list",
+    title: "Edit place",
+    notFound: "We couldn't find this place.",
+    backToList: "Back to list",
+    submit: "Save changes",
+  },
+  categories: {
+    food: "Food",
+    cafe: "Cafe",
+    date: "Date spot",
+    family: "Family",
+    travel: "Travel",
+    shopping: "Gifts & Shopping",
+    other: "Other",
+  },
+  listTags: {
+    date: "Date",
+    family: "Family",
+    trip: "Trip",
+    food: "Food",
+    cafe: "Cafe",
+    shopping: "Shopping",
+    other: "Other",
+  },
+  lists: {
+    title: "My Lists",
+    subtitle: "Group your saved places into lists and share them.",
+    create: "+ New list",
+    createFirst: "+ Create your first list",
+    empty:
+      'No lists yet. Group your places into lists like "Seoul Date Weekend" or "Jeju Trip"!',
+    placeCount: (n: number) => (n === 1 ? "1 place" : `${n} places`),
+    deleteConfirm: "Delete this list? Your saved places won't be deleted.",
+  },
+  listForm: {
+    createTitle: "New list",
+    editTitle: "Edit list",
+    createSubtitle:
+      'Give your list a name — like "Seoul Date Weekend" or "Jeju Trip".',
+    nameLabel: "List name",
+    namePlaceholder: "e.g. Seoul Date Weekend",
+    descLabel: "Description (optional)",
+    descPlaceholder: "e.g. 2-day date course for our December trip",
+    tagsLabel: "Purpose",
+    tagsHint: "Pick one or more tags for this list.",
+    create: "Create list",
+    save: "Save changes",
+    cancel: "Cancel",
+  },
+  listDetail: {
+    back: "← My Lists",
+    addPlaces: "+ Add places",
+    share: "🔗 Share list",
+    copied: "Link copied!",
+    shareHint:
+      "For now this link only works on this device — public sharing is coming soon.",
+    aiPlan: "✨ Plan this list with AI",
+    aiPlanSoon: "AI planning is coming soon — we're on it!",
+    empty: "No places in this list yet. Add some from your saved places!",
+    remove: "Remove",
+    edit: "Edit",
+    delete: "Delete",
+    notFound: "We couldn't find this list.",
+    backToLists: "Back to lists",
+    sharedBadge: "Shared list · view only",
+    sharedHint: "This is a preview of a shared list.",
+  },
+  addPlaces: {
+    title: "Add places to this list",
+    subtitle: "Tap a place to add it — tap again to remove.",
+    empty: "You haven't saved any places yet.",
+    goSave: "Save a place first",
+    added: "Added ✓",
+    done: "Done",
+  },
+  onboarding: {
+    title: "New here? It's 3 quick steps",
+    steps: [
+      {
+        emoji: "🔗",
+        title: "Save",
+        desc: "Paste a reel, map link, or place name.",
+      },
+      {
+        emoji: "🗂️",
+        title: "Organize",
+        desc: "Group places into lists like \"Seoul date weekend\".",
+      },
+      {
+        emoji: "🗺️",
+        title: "Plan",
+        desc: "Turn a list into a rough day plan.",
+      },
+    ],
+  },
+  demo: {
+    load: "Load sample places",
+  },
+  footer: {
+    beta: "Early beta — everything is saved on this device only.",
+    feedback: "💬 Give feedback",
+    feedbackComingSoon:
+      "Feedback form is coming — for now, just message me directly. 🙏",
+  },
+  plan: {
+    title: "Plan helper",
+    subtitle:
+      "Turn your saved places into a rough day plan you can rearrange. No accounts, no AI magic yet — just a quick starting point.",
+    back: "← Back",
+    fromListLabel: "Planning from",
+    promptLabel: "What are you planning?",
+    promptPlaceholder: "e.g. Plan a one-day date in Seoul",
+    examplesLabel: "Need ideas? Try one:",
+    examples: [
+      "Plan a one-day date in Seoul",
+      "Make a family-friendly route",
+      "Create a 2-day Jeju itinerary",
+    ],
+    generate: "Make a plan",
+    regenerate: "🔀 Shuffle",
+    generating: "Planning…",
+    resultTitle: "Your suggested day",
+    resultIntro: (n: number) =>
+      `A rough flow using ${n} of your saved ${
+        n === 1 ? "place" : "places"
+      }. Drag it around in your head — it's just a starting point.`,
+    slots: {
+      morning: "Morning",
+      lunch: "Lunch",
+      afternoon: "Afternoon",
+      evening: "Evening",
+    },
+    tooFew: "Add more places for a fuller plan.",
+    emptyContext:
+      "Save a few places first, then come back to build a plan from them.",
+    goSavePlaces: "Save places",
+    viewList: "View the full list →",
+    disclaimer:
+      "This is a locally-built suggestion, not a live AI recommendation.",
+  },
+};
+
+/** 모든 언어 사전이 따라야 하는 구조 */
+export type Dictionary = typeof en;

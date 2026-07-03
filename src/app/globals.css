@@ -1,26 +1,56 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/*
+ * 디자인 토큰 — Figma Make "Travel & Discovery" 팔레트에서 가져옴.
+ * 라이트(기본)는 따뜻한 크림 베이스, 다크는 Figma의 near-black 베이스.
+ * coral(#ff385c) primary와 mint(#00d4aa) accent는 두 테마 공통.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf7f2;
+  --foreground: #1c1917;
+  --card: #ffffff;
+  --card-foreground: #1c1917;
+  --muted: #f3efe8;
+  --muted-foreground: #78716c;
+  --border: #ece6dc;
+  --primary: #ff385c;
+  --primary-foreground: #ffffff;
+  --primary-hover: #e11d48;
+  --primary-soft: #ffe4e9;
+  --primary-soft-foreground: #c81e4a;
+  --accent: #009e83;
+  --accent-foreground: #ffffff;
+  --ring: #ff385c;
+  --shadow-card: 0 1px 2px rgba(28, 25, 23, 0.04), 0 4px 16px rgba(28, 25, 23, 0.06);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #0a0a0e;
+  --foreground: #f5f5f8;
+  --card: #17161e;
+  --card-foreground: #f5f5f8;
+  --muted: #1e1d27;
+  --muted-foreground: #8b899e;
+  --border: rgba(255, 255, 255, 0.08);
+  --primary: #ff385c;
+  --primary-foreground: #ffffff;
+  --primary-hover: #ff5473;
+  --primary-soft: rgba(255, 56, 92, 0.16);
+  --primary-soft-foreground: #ff8199;
+  --accent: #00d4aa;
+  --accent-foreground: #0a0a0e;
+  --ring: #ff385c;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--border);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
 }

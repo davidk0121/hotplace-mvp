@@ -1,0 +1,246 @@
+import type { Dictionary } from "./en";
+
+export const ko: Dictionary = {
+  nav: {
+    home: "홈",
+    myPlaces: "내 장소",
+    myLists: "내 리스트",
+  },
+  landing: {
+    badge: "오랜만에 한국 가는 사람들을 위해",
+    heroLine1: "릴스에서 본 그 핫플,",
+    heroLine2: "잃어버리기 전에 저장하세요",
+    heroDesc:
+      "해외에 살다 오랜만에 한국에 가면 요즘 어디가 핫한지 알기 어렵죠. 인스타/틱톡에서 발견한 장소를 저장하고, 정리하고, 여자친구·친구와 공유할 수 있는 나만의 한국 핫플 리스트를 만들어보세요.",
+    tryDemo: "장소 저장 시작하기 →",
+    notifyMe: "출시 알림 받기",
+    targetsTitle: "이런 분들을 위해 만들었어요",
+    targets: [
+      {
+        emoji: "✈️",
+        title: "오랜만에 한국 방문",
+        desc: "해외 거주 중이라 요즘 핫플 정보가 늦은 분",
+      },
+      {
+        emoji: "🎓",
+        title: "유학생",
+        desc: "방학 때 한국 가면 뭐 하고 놀지 미리 정리하고 싶은 분",
+      },
+      {
+        emoji: "💑",
+        title: "장거리 커플",
+        desc: "한국 여행/데이트 코스를 같이 계획하고 싶은 커플",
+      },
+    ],
+    featuresTitle: "무엇을 할 수 있나요?",
+    features: [
+      {
+        emoji: "🔗",
+        title: "링크/텍스트로 바로 저장",
+        desc: "인스타·틱톡에서 본 장소를 링크나 메모 그대로 붙여넣으세요.",
+      },
+      {
+        emoji: "🗂️",
+        title: "카테고리·지역 정리",
+        desc: "맛집, 카페, 데이트, 여행 등으로 한눈에 정리돼요.",
+      },
+      {
+        emoji: "👯",
+        title: "리스트로 공유",
+        desc: "'제주 여행', '여자친구랑 갈 곳' 같은 리스트를 만들어 같이 봐요.",
+      },
+      {
+        emoji: "🗺️",
+        title: "지도 앱 바로 열기",
+        desc: "Google/Naver/Kakao 지도에서 원하는 앱으로 바로 열어요.",
+      },
+    ],
+    waitlistTitle: "출시 소식을 가장 먼저 받아보세요",
+    waitlistDesc:
+      "지금은 초기 테스트 버전이에요. 이메일을 남겨주시면 새 기능이 나올 때 알려드릴게요.",
+  },
+  waitlist: {
+    placeholder: "이메일을 입력하세요",
+    submit: "Waitlist 등록",
+    successTitle: "등록 완료 🎉",
+    success: "출시하면 가장 먼저 이메일로 알려드릴게요 — 스팸은 없어요.",
+    duplicateTitle: "이미 등록돼 있어요 🎉",
+    duplicate: "이메일 잘 받아뒀어요 — 출시 소식 곧 전해드릴게요.",
+    emailedTo: "등록한 이메일",
+    invalid: "올바른 이메일 주소를 입력해주세요.",
+  },
+  places: {
+    title: "내 장소",
+    subtitle: "저장한 한국 핫플을 카테고리별로 확인하세요.",
+    add: "+ 장소 추가",
+    addFirst: "+ 장소 추가하기",
+    all: "전체",
+    emptyNone:
+      "아직 저장한 장소가 없어요. 인스타·틱톡 링크를 붙여넣거나 장소 이름만 적어도 저장할 수 있어요.",
+    emptyCategory: "이 카테고리에는 저장된 장소가 없어요.",
+    deleteConfirm: "이 장소를 삭제할까요?",
+  },
+  card: {
+    edit: "수정",
+    delete: "삭제",
+    originalLink: "원본 링크",
+  },
+  form: {
+    pasteLabel: "릴스·지도 링크·장소 이름 붙여넣기",
+    pastePlaceholder:
+      "예: 인스타 릴스 링크, https://naver.me/xxxx, 또는 '성수 카페 추천'",
+    pasteHint:
+      "릴스/틱톡 링크, 지도 링크, 아니면 그냥 장소 이름을 적어도 돼요. 이름/지역/카테고리는 아래에서 정리할 수 있어요.",
+    nameLabel: "장소 이름",
+    namePlaceholder: "예: 어니언 성수",
+    regionLabel: "지역",
+    regionPlaceholder: "예: 성수",
+    categoryLabel: "카테고리",
+    memoLabel: "메모 (선택)",
+    memoPlaceholder: "예: 브런치 맛집, 웨이팅 있을 수 있음",
+  },
+  newPlace: {
+    back: "← 목록으로",
+    title: "장소 추가",
+    subtitle: "링크나 텍스트를 붙여넣고, 필요하면 이름/지역/카테고리를 정리하세요.",
+    submit: "저장하기",
+  },
+  editPlace: {
+    back: "← 목록으로",
+    title: "장소 수정",
+    notFound: "장소를 찾을 수 없어요.",
+    backToList: "목록으로 돌아가기",
+    submit: "수정 완료",
+  },
+  categories: {
+    food: "맛집",
+    cafe: "카페",
+    date: "데이트",
+    family: "가족",
+    travel: "여행",
+    shopping: "선물/쇼핑",
+    other: "기타",
+  },
+  listTags: {
+    date: "데이트",
+    family: "가족",
+    trip: "여행",
+    food: "맛집",
+    cafe: "카페",
+    shopping: "쇼핑",
+    other: "기타",
+  },
+  lists: {
+    title: "내 리스트",
+    subtitle: "저장한 장소를 리스트로 묶어 정리하고 공유하세요.",
+    create: "+ 새 리스트",
+    createFirst: "+ 첫 리스트 만들기",
+    empty:
+      "아직 리스트가 없어요. '서울 데이트 주말', '제주 여행'처럼 장소를 묶어보세요!",
+    placeCount: (n: number) => `장소 ${n}개`,
+    deleteConfirm: "이 리스트를 삭제할까요? 저장된 장소는 삭제되지 않아요.",
+  },
+  listForm: {
+    createTitle: "새 리스트",
+    editTitle: "리스트 수정",
+    createSubtitle:
+      "'서울 데이트 주말', '제주 여행'처럼 리스트 이름을 지어주세요.",
+    nameLabel: "리스트 이름",
+    namePlaceholder: "예: 서울 데이트 주말",
+    descLabel: "설명 (선택)",
+    descPlaceholder: "예: 12월 여행 1박 2일 데이트 코스",
+    tagsLabel: "목적",
+    tagsHint: "리스트의 목적 태그를 하나 이상 골라주세요.",
+    create: "리스트 만들기",
+    save: "수정 완료",
+    cancel: "취소",
+  },
+  listDetail: {
+    back: "← 내 리스트",
+    addPlaces: "+ 장소 추가",
+    share: "🔗 리스트 공유",
+    copied: "링크가 복사됐어요!",
+    shareHint:
+      "지금은 이 기기에서만 열리는 링크예요. 공개 공유는 곧 추가돼요.",
+    aiPlan: "✨ AI로 코스 짜기",
+    aiPlanSoon: "AI 코스 추천은 곧 추가될 예정이에요!",
+    empty: "아직 리스트에 장소가 없어요. 저장한 장소에서 추가해보세요!",
+    remove: "빼기",
+    edit: "수정",
+    delete: "삭제",
+    notFound: "리스트를 찾을 수 없어요.",
+    backToLists: "리스트로 돌아가기",
+    sharedBadge: "공유된 리스트 · 보기 전용",
+    sharedHint: "공유 리스트 미리보기 화면이에요.",
+  },
+  addPlaces: {
+    title: "리스트에 장소 추가",
+    subtitle: "장소를 누르면 추가되고, 다시 누르면 빠져요.",
+    empty: "아직 저장한 장소가 없어요.",
+    goSave: "먼저 장소 저장하기",
+    added: "추가됨 ✓",
+    done: "완료",
+  },
+  onboarding: {
+    title: "처음이세요? 딱 3단계예요",
+    steps: [
+      {
+        emoji: "🔗",
+        title: "저장",
+        desc: "릴스·지도 링크·장소 이름을 붙여넣으세요.",
+      },
+      {
+        emoji: "🗂️",
+        title: "정리",
+        desc: "'서울 데이트 주말'처럼 리스트로 묶어요.",
+      },
+      {
+        emoji: "🗺️",
+        title: "코스",
+        desc: "리스트로 하루 코스를 만들어요.",
+      },
+    ],
+  },
+  demo: {
+    load: "샘플 장소 불러오기",
+  },
+  footer: {
+    beta: "얼리 베타 — 모든 데이터는 이 기기에만 저장돼요.",
+    feedback: "💬 피드백 남기기",
+    feedbackComingSoon:
+      "피드백 폼은 준비 중이에요 — 우선은 저에게 직접 알려주세요. 🙏",
+  },
+  plan: {
+    title: "코스 도우미",
+    subtitle:
+      "저장한 장소로 하루 코스 초안을 만들어드려요. 회원가입도, 거창한 AI도 아직 없어요 — 그냥 빠르게 시작점만.",
+    back: "← 뒤로",
+    fromListLabel: "이 리스트로 코스 짜기",
+    promptLabel: "어떤 코스를 짤까요?",
+    promptPlaceholder: "예: 서울에서 하루 데이트 코스 짜줘",
+    examplesLabel: "예시가 필요하면 눌러보세요:",
+    examples: [
+      "서울에서 하루 데이트 코스 짜줘",
+      "가족과 가기 좋은 코스로 만들어줘",
+      "제주 1박 2일 일정 만들어줘",
+    ],
+    generate: "코스 만들기",
+    regenerate: "🔀 다시 짜기",
+    generating: "코스 짜는 중…",
+    resultTitle: "추천 하루 코스",
+    resultIntro: (n: number) =>
+      `저장한 장소 ${n}곳으로 짠 초안이에요. 순서는 자유롭게 바꿔서 쓰세요 — 시작점일 뿐이에요.`,
+    slots: {
+      morning: "오전",
+      lunch: "점심",
+      afternoon: "오후",
+      evening: "저녁",
+    },
+    tooFew: "장소를 더 추가하면 더 알찬 코스가 돼요.",
+    emptyContext:
+      "먼저 장소를 몇 개 저장한 뒤, 그걸로 코스를 만들어보세요.",
+    goSavePlaces: "장소 저장하기",
+    viewList: "리스트 전체 보기 →",
+    disclaimer: "실시간 AI 추천이 아니라, 앱에서 자체적으로 만든 제안이에요.",
+  },
+};
