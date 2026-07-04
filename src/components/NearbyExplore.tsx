@@ -47,7 +47,7 @@ export default function NearbyExplore({ mode, onSaved }: NearbyExploreProps) {
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-lg font-extrabold">{t.nearby.title}</h2>
         <span className="shrink-0 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-soft-foreground">
-          {mode === "nearme" ? `📍 ${t.areas.nearme}` : t.areas[mode]}
+          {mode === "nearme" ? `📍 ${t.nearby.nearYouBadge}` : t.areas[mode]}
         </span>
       </div>
       <p className="mt-0.5 text-sm text-muted-foreground">

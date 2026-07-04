@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import QuickSave from "@/components/QuickSave";
 import NearbyExplore from "@/components/NearbyExplore";
-import MockMap from "@/components/MockMap";
+import MockMap, { MapMode } from "@/components/MockMap";
 import ListCard from "@/components/ListCard";
 import SaveFromAnywhere from "@/components/SaveFromAnywhere";
 import WaitlistForm from "@/components/WaitlistForm";
@@ -15,16 +15,21 @@ import { Place, PlaceList } from "@/lib/types";
 import { useI18n } from "@/i18n/I18nProvider";
 
 type Mode = "nearme" | AreaKey;
+// 위치 요청의 명확한 상태 머신 — 모든 단계가 화면에 보이도록 한다
+type GeoStatus = "idle" | "locating" | "active" | "denied" | "unavailable";
 
 export default function Home() {
   const { t } = useI18n();
   const [places, setPlaces] = useState<Place[]>([]);
   const [lists, setLists] = useState<PlaceList[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  // 위치/지역 모드 — 기본은 지역(첫 유스케이스인 서울), "Near me" 칩으로 위치 모드 전환
   const [mode, setMode] = useState<Mode>("seoul");
-  const [locating, setLocating] = useState(false);
-  const [geoError, setGeoError] = useState(false);
+  const [mapMode, setMapMode] = useState<MapMode>("map");
+  const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   const refresh = useCallback(() => {
     setPlaces(placesRepo.list());
@@ -35,27 +40,43 @@ export default function Home() {
     refresh();
   }, [refresh]);
 
-  // "내 위치" — 좌표만 받고 mock에 사용 (외부 API 없음). 거부 시 지역 선택 유지.
-  function handleLocate() {
+  // 실패 메시지는 잠시 보여주고 자동으로 지운다
+  function fadeError(status: "denied" | "unavailable") {
+    setGeoStatus(status);
+    setTimeout(
+      () =>
+        setGeoStatus((s) => (s === "denied" || s === "unavailable" ? "idle" : s)),
+      5000
+    );
+  }
+
+  // "내 위치" — 좌표만 받고 mock에 사용 (외부 API 없음)
+  function handleRequestLocation() {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
-      setGeoError(true);
-      setTimeout(() => setGeoError(false), 4000);
+      fadeError("unavailable");
       return;
     }
-    setLocating(true);
-    setGeoError(false);
+    setGeoStatus("locating");
     navigator.geolocation.getCurrentPosition(
-      () => {
+      (pos) => {
+        setUserLocation({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
         setMode("nearme");
-        setLocating(false);
+        setGeoStatus("active");
       },
-      () => {
-        setGeoError(true);
-        setLocating(false);
-        setTimeout(() => setGeoError(false), 4000);
+      (err) => {
+        fadeError(err.code === 1 ? "denied" : "unavailable");
       },
-      { timeout: 8000 }
+      { timeout: 10000, maximumAge: 60000 }
     );
+  }
+
+  function pickArea(a: AreaKey) {
+    setMode(a);
+    // 위치 마커(userLocation)는 유지 — 실제 지도앱처럼 blue dot은 계속 보인다
+    if (geoStatus === "active") setGeoStatus("idle");
   }
 
   function handleSaved(place: Place) {
@@ -67,6 +88,20 @@ export default function Home() {
     setSelectedId(place.id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  const locating = geoStatus === "locating";
+
+  // 상태 칩 문구 (locating → 성공 배지 → 실패 안내)
+  const statusChip =
+    geoStatus === "locating"
+      ? t.nearby.locating
+      : geoStatus === "active" && mode === "nearme"
+      ? `📍 ${t.nearby.nearYouBadge}`
+      : geoStatus === "denied"
+      ? t.nearby.deniedBlocked
+      : geoStatus === "unavailable"
+      ? t.nearby.unavailable
+      : null;
 
   const recent = [...places]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
@@ -82,10 +117,13 @@ export default function Home() {
           bleed
           className="h-[56dvh] min-h-[420px] w-full"
           places={places}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-          onLocate={handleLocate}
+          selectedPlaceId={selectedId}
+          userLocation={userLocation}
+          mapMode={mapMode}
           locating={locating}
+          onSelectPlace={setSelectedId}
+          onRequestLocation={handleRequestLocation}
+          onToggleMapMode={setMapMode}
         />
 
         {/* 플로팅 붙여넣기 바 (primary action) */}
@@ -93,16 +131,16 @@ export default function Home() {
           <QuickSave onSaved={handleSaved} onViewOnMap={handleViewOnMap} />
         </div>
 
-        {/* 플로팅 지역 칩 */}
+        {/* 플로팅 지역 칩 (글래스 pill) */}
         <div className="absolute inset-x-0 top-[72px] z-30 overflow-x-auto px-3">
           <div className="mx-auto flex w-max gap-2 pb-1">
             <button
-              onClick={handleLocate}
+              onClick={handleRequestLocation}
               disabled={locating}
-              className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold shadow-md backdrop-blur transition ${
+              className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-semibold transition ${
                 mode === "nearme"
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-card/85 text-muted-foreground hover:bg-card"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "glass text-foreground"
               }`}
             >
               {locating ? t.nearby.locating : `📍 ${t.areas.nearme}`}
@@ -110,11 +148,11 @@ export default function Home() {
             {AREA_KEYS.map((a) => (
               <button
                 key={a}
-                onClick={() => setMode(a)}
-                className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold shadow-md backdrop-blur transition ${
+                onClick={() => pickArea(a)}
+                className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-semibold transition ${
                   mode === a
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card/85 text-muted-foreground hover:bg-card"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "glass text-foreground"
                 }`}
               >
                 {t.areas[a]}
@@ -123,17 +161,20 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 위치 거부/실패 안내 */}
-        {geoError && (
-          <p className="absolute left-1/2 top-[120px] z-30 -translate-x-1/2 whitespace-nowrap rounded-full bg-card/90 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-md backdrop-blur">
-            {t.nearby.denied}
+        {/* 위치 상태 칩 — 탭 직후부터 항상 보이는 피드백 */}
+        {statusChip && (
+          <p
+            className="glass-strong absolute left-1/2 top-[122px] z-30 -translate-x-1/2 whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold text-foreground"
+            role="status"
+          >
+            {statusChip}
           </p>
         )}
       </div>
 
-      {/* ── 바텀 시트 스타일 콘텐츠 ─────────────────────────── */}
-      <div className="relative z-10 -mt-5 rounded-t-3xl border-t border-border bg-background pb-6 pt-2 shadow-[0_-8px_24px_rgba(0,0,0,0.08)]">
-        <div className="mx-auto mt-1 h-1 w-10 rounded-full bg-muted" />
+      {/* ── 글래스 바텀 시트 스타일 콘텐츠 ───────────────────── */}
+      <div className="glass-strong relative z-10 -mt-5 rounded-t-3xl border-x-0 border-b-0 pb-6 pt-2">
+        <div className="mx-auto mt-1 h-1 w-10 rounded-full bg-muted-foreground/30" />
         <p className="mt-2 text-center text-xs font-medium text-muted-foreground">
           {t.home.mapTitle}
         </p>

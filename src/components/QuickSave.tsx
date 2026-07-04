@@ -51,7 +51,7 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
       {/* 플로팅 붙여넣기 바 (frosted) */}
       <form
         onSubmit={handleStart}
-        className="flex items-center gap-2 rounded-full border border-border bg-card/90 p-1.5 pl-4 shadow-lg backdrop-blur"
+        className="glass-strong flex items-center gap-2 rounded-full p-1.5 pl-4"
       >
         <span className="shrink-0 text-base">🔍</span>
         <input
@@ -79,7 +79,7 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
             onClick={reset}
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
-          <div className="relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-border bg-card p-5 shadow-xl sm:rounded-3xl">
+          <div className="glass-strong relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl p-5 sm:rounded-3xl">
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted sm:hidden" />
 
             {phase === "confirm" && (

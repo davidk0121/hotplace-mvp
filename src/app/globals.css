@@ -24,6 +24,12 @@
   --accent-foreground: #ffffff;
   --ring: #ff385c;
   --shadow-card: 0 1px 2px rgba(28, 25, 23, 0.04), 0 4px 16px rgba(28, 25, 23, 0.06);
+  /* Liquid Glass 토큰 — 완전 투명이 아닌 '틴티드' 글래스 (가독성 우선) */
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-strong: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(28, 25, 23, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.85);
+  --glass-shadow: rgba(28, 25, 23, 0.12);
 }
 
 .dark {
@@ -43,6 +49,11 @@
   --accent-foreground: #0a0a0e;
   --ring: #ff385c;
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --glass: rgba(23, 22, 30, 0.55);
+  --glass-strong: rgba(23, 22, 30, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.45);
 }
 
 @layer base {
@@ -52,5 +63,30 @@
   body {
     background: var(--background);
     color: var(--foreground);
+  }
+}
+
+@layer components {
+  /*
+   * iOS Liquid Glass 스타일 플로팅 패널.
+   * 틴티드 배경 + blur + 얇은 보더 + 상단 하이라이트로 층위감을 준다.
+   * .glass        — 칩/컨트롤 등 가벼운 요소
+   * .glass-strong — 검색바/카드 등 텍스트가 얹히는 요소 (더 불투명, 가독성 우선)
+   */
+  .glass {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 20px var(--glass-shadow),
+      inset 0 1px 0 var(--glass-highlight);
+  }
+  .glass-strong {
+    background: var(--glass-strong);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 28px var(--glass-shadow),
+      inset 0 1px 0 var(--glass-highlight);
   }
 }

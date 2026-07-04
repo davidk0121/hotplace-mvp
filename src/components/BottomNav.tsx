@@ -23,7 +23,15 @@ export default function BottomNav() {
   }
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur sm:hidden">
+    <nav
+      className="fixed inset-x-0 bottom-0 z-30 border-t sm:hidden"
+      style={{
+        background: "var(--glass-strong)",
+        borderColor: "var(--glass-border)",
+        backdropFilter: "blur(20px) saturate(160%)",
+        WebkitBackdropFilter: "blur(20px) saturate(160%)",
+      }}
+    >
       <div className="mx-auto flex max-w-md items-center justify-around px-4 pb-6 pt-2">
         {tabs.map((tab) => {
           const active = isActive(tab.href);

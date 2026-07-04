@@ -23,8 +23,10 @@
 >    Los Angeles or a restaurant in Seongsu).
 > 2. **Save it to your map** and confirm the pin appears.
 > 3. **Tap the pin** to see the place details.
-> 4. **Try the map controls** — Map/Satellite toggle, zoom, "Use my location"
->    (or pick an area like Orange County, Hongdae, or Jeju).
+> 4. **Try the map controls** — Map/Satellite toggle, zoom, and "Near me"
+>    (allow location and you should see a pulsing blue dot + a "Near you ·
+>    preview" badge; if you deny it, just pick an area like Orange County,
+>    Hongdae, or Jeju).
 > 5. **Save a nearby suggestion** — pick an area and hit Save.
 > 6. **Create a collection** (e.g. "LA date night" or "Jeju trip") and add places.
 > 7. **Generate a plan** — open Plan and make a rough day course.
@@ -54,8 +56,9 @@
 >    인스타 릴스, 틱톡 링크 (아니면 그냥 장소 이름 — LA 카페든 성수 맛집이든).
 > 2. **지도에 저장**하고 핀이 생기는지 확인해봐.
 > 3. **핀을 눌러서** 장소 상세가 보이는지 확인.
-> 4. **지도 컨트롤도 눌러봐** — 지도/위성 전환, 확대/축소, "내 위치"
->    (아니면 오렌지카운티·홍대·제주 같은 지역 선택).
+> 4. **지도 컨트롤도 눌러봐** — 지도/위성 전환, 확대/축소, 그리고 "내 주변"
+>    (위치를 허용하면 파란 점이 깜빡이면서 "내 주변 · 미리보기" 배지가 떠.
+>    거부해도 괜찮아 — 오렌지카운티·홍대·제주 같은 지역을 고르면 돼).
 > 5. **주변 추천 저장** — 지역을 골라서 Save 눌러봐.
 > 6. **컬렉션 만들기** (예: "LA 데이트", "제주 여행") 하고 장소를 담아봐.
 > 7. **코스 만들기** — 코스 탭에서 하루 코스를 만들어봐.
@@ -80,7 +83,11 @@
   정확하지 않다. 지도 우하단에 작은 안내 배지가 떠 있다. 위성 모드도 시각 효과다.
 - **하나씩 저장**: 붙여넣은 링크/이름을 한 건씩 저장한다. 구글/네이버/카카오에
   이미 저장해둔 리스트를 통째로 가져오는 기능은 아직 없다 (향후 확장).
-- **"내 주변" 추천은 mock**: 위치 권한은 받지만 실제 반경 검색은 아직 없다 —
-  지역칩(LA/오렌지카운티/서울/성수/홍대/강남/제주/부산) 기반 큐레이션이다.
+- **"내 주변"은 미리보기 상태 전용**: 브라우저 위치 권한은 파란 위치 마커와
+  "내 주변 · 미리보기" 배지를 띄우는 데만 쓰인다. 좌표로 실제 장소를 검색하지는
+  않는다.
+- **주변 추천은 mock**: 실제 라이브 검색 결과가 아니라 지역칩(내 주변/LA/
+  오렌지카운티/서울/성수/홍대/강남/제주/부산) 기반 큐레이션 샘플이다.
+  실제 지도·장소 검색(Mapbox/Google/Apple 등) 연동은 이후 단계에 추가된다.
 - **기기 간 공유 없음**: 데이터는 각자 브라우저 localStorage에만 저장된다.
   공유 링크도 현재는 같은 기기에서만 열린다 (Supabase 연결 전까지의 제약).
