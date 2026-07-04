@@ -1,7 +1,7 @@
 # HotPlace — Beta testing
 
 지인에게 아래 메시지를 그대로 복사해 보내면 된다. (영어 / 한국어 버전)
-링크의 `YOUR-VERCEL-URL` 부분만 실제 Vercel 배포 주소로 바꿔서 보낸다.
+배포 주소는 https://hotplace-mvp.vercel.app 로 이미 채워져 있다.
 
 ---
 
@@ -14,7 +14,7 @@
 > ideas, anywhere from LA to Seoul.
 > It's an early beta, so I'd love your honest reaction.
 >
-> 👉 **https://YOUR-VERCEL-URL**
+> 👉 **https://hotplace-mvp.vercel.app**
 >
 > No sign-up needed — everything is saved on your own device. Takes about 3 minutes:
 >
@@ -48,7 +48,7 @@
 > 여행 장소 전부. LA든 서울이든 상관없어. 아직 초기 베타라 솔직한 반응이 정말
 > 도움이 돼.
 >
-> 👉 **https://YOUR-VERCEL-URL**
+> 👉 **https://hotplace-mvp.vercel.app**
 >
 > 회원가입 없어 — 데이터는 네 기기에만 저장돼. 3분이면 돼:
 >
@@ -73,7 +73,7 @@
 
 ## 테스트 전 준비 (배포자용)
 
-- Vercel 배포 주소를 위 `YOUR-VERCEL-URL`에 넣는다.
+- 배포 주소(https://hotplace-mvp.vercel.app)는 위 메시지에 이미 채워져 있다.
 - (선택) `src/lib/config.ts`의 `FEEDBACK_FORM_URL`에 Google Form 링크를 넣으면
   "피드백 남기기" 버튼이 폼으로 연결된다. 비워두면 "직접 알려달라" 안내가 뜬다.
 
