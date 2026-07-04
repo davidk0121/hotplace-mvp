@@ -7,7 +7,6 @@ import NearbyExplore from "@/components/NearbyExplore";
 import MockMap, { MapMode } from "@/components/MockMap";
 import ListCard from "@/components/ListCard";
 import SaveFromAnywhere from "@/components/SaveFromAnywhere";
-import WaitlistForm from "@/components/WaitlistForm";
 import { categoryEmoji } from "@/lib/constants";
 import { AREA_KEYS, AreaKey } from "@/lib/nearby";
 import { listsRepo, placesRepo } from "@/lib/storage";
@@ -107,6 +106,86 @@ export default function Home() {
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .slice(0, 4);
 
+  // ── 시트 섹션들 — 사용자 콘텐츠가 있으면 그것부터, 없으면 발견(mock)부터 ──
+  const exploreSection = <NearbyExplore mode={mode} onSaved={handleSaved} />;
+
+  const recentSection = recent.length > 0 && (
+    <section>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-extrabold">{t.home.recentTitle}</h2>
+        <Link
+          href="/places"
+          className="text-sm font-semibold text-primary hover:underline"
+        >
+          {t.home.recentSeeAll}
+        </Link>
+      </div>
+      <div className="mt-3 flex flex-col gap-2">
+        {recent.map((p) => (
+          <button
+            key={p.id}
+            onClick={() => handleViewOnMap(p)}
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 text-left shadow-card transition hover:bg-muted"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-lg">
+              {categoryEmoji(p.category)}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-semibold text-card-foreground">
+                {p.name}
+              </p>
+              {p.region && (
+                <p className="truncate text-xs text-muted-foreground">
+                  📍 {p.region}
+                </p>
+              )}
+            </div>
+            <span className="shrink-0 text-xs text-muted-foreground">
+              {t.categories[p.category]}
+            </span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+
+  const collectionsSection = (
+    <section>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-extrabold">{t.home.listsTitle}</h2>
+        {lists.length > 0 && (
+          <Link
+            href="/lists"
+            className="text-sm font-semibold text-primary hover:underline"
+          >
+            {t.home.listsSeeAll}
+          </Link>
+        )}
+      </div>
+      {lists.length === 0 ? (
+        <div className="mt-3 rounded-3xl border border-border bg-card p-5 text-center shadow-card">
+          <p className="text-sm text-muted-foreground">{t.home.listsEmpty}</p>
+          <Link
+            href="/lists/new"
+            className="mt-3 inline-block rounded-2xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
+          >
+            {t.home.makeList}
+          </Link>
+        </div>
+      ) : (
+        <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
+          {lists.slice(0, 6).map((l) => (
+            <div key={l.id} className="w-64 shrink-0">
+              <ListCard list={l} places={places} />
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+
+  const hasContent = places.length > 0;
+
   return (
     <div className="flex flex-col">
       <h1 className="sr-only">{t.home.title}</h1>
@@ -175,99 +254,24 @@ export default function Home() {
       {/* ── 글래스 바텀 시트 스타일 콘텐츠 ───────────────────── */}
       <div className="glass-strong relative z-10 -mt-5 rounded-t-3xl border-x-0 border-b-0 pb-6 pt-2">
         <div className="mx-auto mt-1 h-1 w-10 rounded-full bg-muted-foreground/30" />
-        <p className="mt-2 text-center text-xs font-medium text-muted-foreground">
-          {t.home.mapTitle}
-        </p>
 
-        <div className="mx-auto mt-6 flex max-w-3xl flex-col gap-8 px-4">
-          {/* 주변 둘러보기 */}
-          <NearbyExplore mode={mode} onSaved={handleSaved} />
-
-          {/* 최근 저장 */}
-          {recent.length > 0 && (
-            <section>
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-extrabold">{t.home.recentTitle}</h2>
-                <Link
-                  href="/places"
-                  className="text-sm font-semibold text-primary hover:underline"
-                >
-                  {t.home.recentSeeAll}
-                </Link>
-              </div>
-              <div className="mt-3 flex flex-col gap-2">
-                {recent.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => handleViewOnMap(p)}
-                    className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 text-left shadow-card transition hover:bg-muted"
-                  >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-lg">
-                      {categoryEmoji(p.category)}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-semibold text-card-foreground">
-                        {p.name}
-                      </p>
-                      {p.region && (
-                        <p className="truncate text-xs text-muted-foreground">
-                          📍 {p.region}
-                        </p>
-                      )}
-                    </div>
-                    <span className="shrink-0 text-xs text-muted-foreground">
-                      {t.categories[p.category]}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </section>
+        <div className="mx-auto mt-5 flex max-w-3xl flex-col gap-8 px-4">
+          {/* 내 콘텐츠가 있으면 그것부터, 빈 계정이면 발견(mock) 먼저 */}
+          {hasContent ? (
+            <>
+              {recentSection}
+              {collectionsSection}
+              {exploreSection}
+            </>
+          ) : (
+            <>
+              {exploreSection}
+              {collectionsSection}
+            </>
           )}
-
-          {/* 컬렉션 미리보기 */}
-          <section>
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-extrabold">{t.home.listsTitle}</h2>
-              {lists.length > 0 && (
-                <Link
-                  href="/lists"
-                  className="text-sm font-semibold text-primary hover:underline"
-                >
-                  {t.home.listsSeeAll}
-                </Link>
-              )}
-            </div>
-            {lists.length === 0 ? (
-              <div className="mt-3 rounded-3xl border border-border bg-card p-5 text-center shadow-card">
-                <p className="text-sm text-muted-foreground">
-                  {t.home.listsEmpty}
-                </p>
-                <Link
-                  href="/lists/new"
-                  className="mt-3 inline-block rounded-2xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
-                >
-                  {t.home.makeList}
-                </Link>
-              </div>
-            ) : (
-              <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
-                {lists.slice(0, 6).map((l) => (
-                  <div key={l.id} className="w-64 shrink-0">
-                    <ListCard list={l} places={places} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
 
           {/* 어디서든 저장하기 안내 */}
           <SaveFromAnywhere />
-
-          {/* 얇은 waitlist */}
-          <section className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-muted/40 p-5 text-center">
-            <h2 className="text-base font-bold">{t.landing.notifyMe}</h2>
-            <WaitlistForm />
-          </section>
         </div>
       </div>
     </div>

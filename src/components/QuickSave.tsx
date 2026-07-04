@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import PlaceForm from "@/components/PlaceForm";
-import { placesRepo } from "@/lib/storage";
+import { listsRepo, placesRepo } from "@/lib/storage";
 import { detectSource, SOURCE_EMOJI } from "@/lib/source";
 import { NewPlaceInput, Place } from "@/lib/types";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -101,6 +101,7 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
 
             {phase === "saved" && savedPlace && (
               <div className="text-center">
+                {/* 컬렉션이 없으면 빈 목록 대신 바로 만들기 화면으로 보낸다 */}
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-2xl">
                   ✓
                 </div>
@@ -121,10 +122,12 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
                     📍 {t.quickSave.viewOnMap}
                   </button>
                   <Link
-                    href="/lists"
+                    href={listsRepo.list().length > 0 ? "/lists" : "/lists/new"}
                     className="flex-1 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
                   >
-                    {t.quickSave.addToList}
+                    {listsRepo.list().length > 0
+                      ? t.quickSave.addToList
+                      : t.quickSave.makeList}
                   </Link>
                 </div>
                 <button
