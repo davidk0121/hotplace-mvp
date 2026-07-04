@@ -64,7 +64,7 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
         <button
           type="submit"
           disabled={!raw.trim()}
-          className="shrink-0 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:opacity-50"
+          className="tap shrink-0 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:opacity-50"
         >
           {t.quickSave.review}
         </button>
@@ -77,9 +77,9 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
             type="button"
             aria-label="Close"
             onClick={reset}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="animate-fade absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
-          <div className="glass-strong relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl p-5 sm:rounded-3xl">
+          <div className="animate-sheet-up glass-strong relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl p-5 sm:rounded-3xl">
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted sm:hidden" />
 
             {phase === "confirm" && (
@@ -117,7 +117,7 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
             {phase === "saved" && savedPlace && (
               <div className="text-center">
                 {/* 컬렉션이 없으면 빈 목록 대신 바로 만들기 화면으로 보낸다 */}
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-2xl">
+                <div className="animate-pop mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-2xl">
                   ✓
                 </div>
                 <p className="mt-3 font-bold text-card-foreground">

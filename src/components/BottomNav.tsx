@@ -39,7 +39,7 @@ export default function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className="flex flex-col items-center gap-1"
+              className="tap flex flex-col items-center gap-1"
             >
               <span
                 className={`flex h-8 w-14 items-center justify-center rounded-full text-lg transition ${

@@ -192,6 +192,7 @@ export const ko: Dictionary = {
     subtitle: "맛집, 카페, 데이트, 여행 장소를 어디서든 저장하세요.",
     mapTitle: "가보고 싶은 모든 장소를 한 지도에",
     mapEmpty: "저장한 장소가 지도에 핀으로 표시돼요.",
+    sheetTitle: "내 장소",
     recentTitle: "최근 저장",
     recentSeeAll: "전체 보기",
     listsTitle: "내 컬렉션",

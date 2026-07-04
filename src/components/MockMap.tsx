@@ -34,12 +34,14 @@ export interface MapViewProps {
   className?: string;
   /** true면 풀블리드(테두리/라운드 없음) — Home 히어로용 */
   bleed?: boolean;
+  /** 하단 컨트롤/카드를 위로 띄우는 여백(px) — 바텀시트 peek 높이만큼 */
+  contentInset?: number;
 }
 
 const ZOOM_LEVELS = [0.7, 1, 1.4, 1.9];
 
 const glassBtn =
-  "glass flex h-10 w-10 items-center justify-center rounded-full text-base text-foreground transition hover:opacity-90 active:scale-95";
+  "tap glass flex h-10 w-10 items-center justify-center rounded-full text-base text-foreground hover:opacity-90";
 
 /** 목업 지도 구현 — 실제 지도 API 없음. MapViewProps 인터페이스 참고. */
 export default function MockMap({
@@ -54,6 +56,7 @@ export default function MockMap({
   onToggleMapMode,
   className = "",
   bleed = false,
+  contentInset = 12,
 }: MapViewProps) {
   const { t } = useI18n();
   const [zoomIdx, setZoomIdx] = useState(1);
@@ -206,7 +209,7 @@ export default function MockMap({
               <button
                 onClick={() => onSelectPlace(p.id)}
                 aria-label={p.name}
-                className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white shadow-md transition-transform"
+                className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white shadow-md transition-all duration-200 ease-out active:!scale-90"
                 style={{
                   width: active ? 40 : 30,
                   height: active ? 40 : 30,
@@ -225,7 +228,10 @@ export default function MockMap({
       )}
 
       {/* ── 컨트롤 (우측, iOS 플로팅 글래스) ─────────────────── */}
-      <div className="absolute bottom-24 right-3 z-30 flex flex-col gap-2">
+      <div
+        className="absolute right-3 z-30 flex flex-col gap-2"
+        style={{ bottom: contentInset + 52 }}
+      >
         <button
           aria-label={t.map.zoomIn}
           onClick={() =>
@@ -262,10 +268,13 @@ export default function MockMap({
       </div>
 
       {/* ── 지도/위성 세그먼트 (좌하단, iOS 스타일) ──────────── */}
-      <div className="glass absolute bottom-3 left-3 z-30 flex items-center rounded-full p-1 text-xs font-semibold">
+      <div
+        className="glass absolute left-3 z-30 flex items-center rounded-full p-1 text-xs font-semibold"
+        style={{ bottom: contentInset }}
+      >
         <button
           onClick={() => onToggleMapMode("map")}
-          className={`rounded-full px-3.5 py-1.5 transition ${
+          className={`tap rounded-full px-3.5 py-1.5 transition-colors ${
             !satellite
               ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground"
@@ -275,7 +284,7 @@ export default function MockMap({
         </button>
         <button
           onClick={() => onToggleMapMode("satellite")}
-          className={`rounded-full px-3.5 py-1.5 transition ${
+          className={`tap rounded-full px-3.5 py-1.5 transition-colors ${
             satellite
               ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground"
@@ -286,13 +295,19 @@ export default function MockMap({
       </div>
 
       {/* preview 배지 — 핀 위치가 아직 실제가 아님을 분명히 (과하지 않게) */}
-      <span className="glass absolute bottom-16 left-3 z-30 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground/80">
+      <span
+        className="glass absolute left-3 z-30 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground/80"
+        style={{ bottom: contentInset + 44 }}
+      >
         🛈 {t.map.preview}
       </span>
 
       {/* ── 선택된 장소 플로팅 카드 (글래스, 가독성 강) ──────── */}
       {selected && (
-        <div className="glass-strong absolute inset-x-3 bottom-14 z-40 rounded-2xl p-3">
+        <div
+          className="glass-strong absolute inset-x-3 z-40 rounded-2xl p-3"
+          style={{ bottom: contentInset }}
+        >
           <div className="flex items-center gap-3">
             <div
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg"

@@ -198,6 +198,7 @@ export const en = {
       "Save restaurants, cafes, date spots, and travel ideas from anywhere.",
     mapTitle: "Your saved places, on one map",
     mapEmpty: "Places you save show up here as pins on your map.",
+    sheetTitle: "Your places",
     recentTitle: "Recently saved",
     recentSeeAll: "See all",
     listsTitle: "Your collections",
