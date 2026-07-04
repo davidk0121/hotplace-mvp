@@ -209,7 +209,13 @@ export const en = {
   quickSave: {
     placeholder: "Paste any map link, Reel, TikTok, or place name",
     hint: "Found a place? Paste it here — from any map app or social.",
-    start: "Save",
+    review: "Review place",
+    saveToMap: "Save to map",
+    confirmTitle: "Confirm the place",
+    confirmSubtitle:
+      "Add a name to save it to your map — only the place name is required.",
+    sourceDetectedHint:
+      "We detected the source. Add the place name to finish saving.",
     detectedFrom: "From",
     savedTitle: "Saved to your map",
     savedBody: (name: string) => `${name} was added to your map.`,
@@ -242,7 +248,7 @@ export const en = {
     empty: "No pins yet — paste a place above to start your map.",
     openIn: "Open in",
     remove: "Remove",
-    preview: "Preview map — real map coming soon",
+    preview: "Preview map · real locations coming later",
     mapMode: "Map",
     satellite: "Satellite",
     zoomIn: "Zoom in",

@@ -66,7 +66,7 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
           disabled={!raw.trim()}
           className="shrink-0 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:opacity-50"
         >
-          {t.quickSave.start}
+          {t.quickSave.review}
         </button>
       </form>
 
@@ -84,18 +84,33 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
 
             {phase === "confirm" && (
               <>
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                {/* 빠른 확인 단계임을 명확히 — 이름만 필수 */}
+                <h2 className="text-lg font-extrabold text-card-foreground">
+                  {t.quickSave.confirmTitle}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t.quickSave.confirmSubtitle}
+                </p>
+                <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
                   <span>{SOURCE_EMOJI[source]}</span>
                   <span>
                     {t.quickSave.detectedFrom} {t.source[source]}
                   </span>
                 </div>
-                <PlaceForm
-                  draftInput={raw}
-                  submitLabel={t.quickSave.start}
-                  onSubmit={handleSave}
-                  onCancel={reset}
-                />
+                {/* URL 감지 시: 자동 파싱 실패로 오해하지 않게 기대치 안내 */}
+                {source !== "text" && (
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {t.quickSave.sourceDetectedHint}
+                  </p>
+                )}
+                <div className="mt-4">
+                  <PlaceForm
+                    draftInput={raw}
+                    submitLabel={t.quickSave.saveToMap}
+                    onSubmit={handleSave}
+                    onCancel={reset}
+                  />
+                </div>
               </>
             )}
 

@@ -285,9 +285,9 @@ export default function MockMap({
         </button>
       </div>
 
-      {/* preview 배지 (우하단) */}
-      <span className="glass absolute bottom-3 right-3 z-30 rounded-full px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
-        {t.map.preview}
+      {/* preview 배지 — 핀 위치가 아직 실제가 아님을 분명히 (과하지 않게) */}
+      <span className="glass absolute bottom-16 left-3 z-30 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground/80">
+        🛈 {t.map.preview}
       </span>
 
       {/* ── 선택된 장소 플로팅 카드 (글래스, 가독성 강) ──────── */}

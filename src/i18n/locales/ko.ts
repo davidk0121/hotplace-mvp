@@ -202,7 +202,12 @@ export const ko: Dictionary = {
   quickSave: {
     placeholder: "지도 링크, 릴스, 틱톡, 장소명을 붙여넣어 저장하세요",
     hint: "어디서 봤든 붙여넣으면 저장돼요 — 지도앱, 릴스, 틱톡 전부.",
-    start: "저장",
+    review: "장소 확인",
+    saveToMap: "지도에 저장",
+    confirmTitle: "장소 확인",
+    confirmSubtitle:
+      "지도에 저장하려면 장소 이름만 확인해 주세요 — 이름만 필수예요.",
+    sourceDetectedHint: "링크 출처를 감지했어요. 장소 이름을 확인하면 저장돼요.",
     detectedFrom: "출처",
     savedTitle: "지도에 저장됐어요",
     savedBody: (name: string) => `${name}이(가) 지도에 추가됐어요.`,
@@ -235,7 +240,7 @@ export const ko: Dictionary = {
     empty: "아직 핀이 없어요 — 위에서 장소를 붙여넣어 시작해보세요.",
     openIn: "지도 열기",
     remove: "빼기",
-    preview: "미리보기 지도 — 실제 지도 연동은 곧 추가돼요",
+    preview: "미리보기 지도 · 실제 위치 연동 예정",
     mapMode: "지도",
     satellite: "위성",
     zoomIn: "확대",
