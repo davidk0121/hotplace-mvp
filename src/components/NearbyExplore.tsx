@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { categoryColor, categoryEmoji } from "@/lib/constants";
 import {
-  AREA_KEYS,
   AreaKey,
   getMockNearbyByArea,
   getMockNearbyByLocation,
@@ -13,51 +12,22 @@ import { placesRepo } from "@/lib/storage";
 import { Place } from "@/lib/types";
 import { useI18n } from "@/i18n/I18nProvider";
 
-export default function NearbyExplore({
-  onSaved,
-}: {
+interface NearbyExploreProps {
+  /** 지도 칩에서 선택된 모드 — 'nearme'(위치) 또는 지역 키 */
+  mode: "nearme" | AreaKey;
   onSaved?: (place: Place) => void;
-}) {
+}
+
+// "주변 둘러보기" 제안 섹션 — 지역/모드 선택은 지도 위 칩이 담당한다.
+export default function NearbyExplore({ mode, onSaved }: NearbyExploreProps) {
   const { t } = useI18n();
-  // 기본은 Seoul을 보여줘 바로 발견/저장할 거리가 있게 한다.
-  const [area, setArea] = useState<AreaKey>("seoul");
-  const [usingLocation, setUsingLocation] = useState(false);
-  const [locating, setLocating] = useState(false);
-  const [geoError, setGeoError] = useState(false);
   const [savedKeys, setSavedKeys] = useState<Set<string>>(new Set());
 
-  const places: NearbyPlace[] = usingLocation
-    ? getMockNearbyByLocation(0, 0)
-    : getMockNearbyByArea(area);
+  const places: NearbyPlace[] =
+    mode === "nearme" ? getMockNearbyByLocation(0, 0) : getMockNearbyByArea(mode);
 
   function keyOf(p: NearbyPlace) {
     return `${p.name}|${p.region}`;
-  }
-
-  function handleUseLocation() {
-    if (typeof navigator === "undefined" || !navigator.geolocation) {
-      setGeoError(true);
-      return;
-    }
-    setLocating(true);
-    setGeoError(false);
-    navigator.geolocation.getCurrentPosition(
-      () => {
-        // 좌표는 받지만 실제 검색 API는 호출하지 않는다 (무료 mock).
-        setUsingLocation(true);
-        setLocating(false);
-      },
-      () => {
-        setGeoError(true);
-        setLocating(false);
-      },
-      { timeout: 8000 }
-    );
-  }
-
-  function pickArea(a: AreaKey) {
-    setArea(a);
-    setUsingLocation(false);
   }
 
   function handleSave(p: NearbyPlace) {
@@ -75,49 +45,15 @@ export default function NearbyExplore({
   return (
     <section>
       <div className="flex items-center justify-between gap-2">
-        <div>
-          <h2 className="text-lg font-extrabold">{t.nearby.title}</h2>
-          <p className="text-sm text-muted-foreground">{t.nearby.subtitle}</p>
-        </div>
-        <button
-          onClick={handleUseLocation}
-          disabled={locating}
-          className="shrink-0 rounded-full bg-primary-soft px-3.5 py-2 text-xs font-semibold text-primary-soft-foreground transition hover:opacity-80 disabled:opacity-60"
-        >
-          {locating ? t.nearby.locating : t.nearby.useLocation}
-        </button>
+        <h2 className="text-lg font-extrabold">{t.nearby.title}</h2>
+        <span className="shrink-0 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-soft-foreground">
+          {mode === "nearme" ? `📍 ${t.areas.nearme}` : t.areas[mode]}
+        </span>
       </div>
+      <p className="mt-0.5 text-sm text-muted-foreground">
+        {t.nearby.subtitle}
+      </p>
 
-      {geoError && (
-        <p className="mt-2 text-xs text-muted-foreground">{t.nearby.denied}</p>
-      )}
-
-      {/* 지역 칩 */}
-      <div className="mt-3">
-        <p className="mb-2 text-xs font-medium text-muted-foreground">
-          {usingLocation ? t.nearby.nearYou : t.nearby.chooseArea}
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {AREA_KEYS.map((a) => {
-            const active = !usingLocation && area === a;
-            return (
-              <button
-                key={a}
-                onClick={() => pickArea(a)}
-                className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
-                  active
-                    ? "bg-primary text-primary-foreground"
-                    : "border border-border bg-card text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                {t.areas[a]}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 주변 mock 장소 카드 (가로 스크롤) */}
       <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
         {places.map((p) => {
           const saved = savedKeys.has(keyOf(p));

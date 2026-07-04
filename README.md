@@ -1,9 +1,12 @@
 # HotPlace MVP
 
-**HotPlace = 한국에서 가보고 싶은 모든 장소를 담는 하나의 개인 지도.**
+**HotPlace = 가보고 싶은 모든 장소를 한 지도에 모아두는 앱.**
 
-> 릴스에서 본 핫플부터 지도앱 링크까지, 한국에서 가보고 싶은 장소를 한 지도에 모아두는 앱.
-> (EN) Save every Korea place you find — from Reels, map links, and recommendations — into one map.
+> Your personal map for every place you want to try.
+> 지도 링크·릴스·틱톡·추천에서 발견한 맛집, 카페, 데이트, 여행 장소를 한 지도에.
+
+한국 여행이 첫 번째 핵심 유스케이스지만(지역칩·예시에 반영), 앱 자체는
+글로벌 — LA/오렌지카운티 등 어디서든 동일하게 동작한다.
 
 오랜만에 한국 가는 사람은 요즘 뭐가 좋은지 알기 어렵고, 발견한 장소는 인스타/틱톡/
 네이버·카카오·구글·애플 지도/메시지/블로그에 흩어져 있습니다. HotPlace는 그것들을
