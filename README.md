@@ -228,16 +228,35 @@ npm run dev
 물어볼 것: 첫 화면에서 무슨 앱인지 바로 이해했는지 / 장소 저장이 직관적이었는지 /
 어디서 막혔는지 / 실제로 쓸 것 같은지.
 
-## 다음 단계 우선순위 제안
+## Roadmap / What's next
 
-1. **Supabase 연결** — `supabase/schema.sql` 실행 후, `lib/storage.ts`의
-   localStorage 함수들을 Supabase 클라이언트 호출로 교체. anon_id를
-   쿠키/localStorage에 저장해 "임시 사용자" 구분에 사용. 이 시점에
-   `/lists/share/[shareId]`가 실제 기기 간 공유 링크로 동작하게 된다.
-2. **Supabase Auth 도입** — 익명 사용자 데이터(anon_id)를 로그인한
-   계정(user_id)으로 이관하는 마이그레이션 로직 추가.
-3. **실제 waitlist 이메일 저장** — `waitlist_emails` 테이블에 연결.
-4. **코스 저장/공유** — 지금은 화면에만 표시되는 mock plan을 `saved_plans`
-   테이블에 저장하고 공유할 수 있게 확장.
-5. (비용 발생 가능, 검증 후 진행) `plan.ts`의 `generatePlan()`을 OpenAI API
-   호출로 교체, 지도 API 연동, Instagram/TikTok 링크 미리보기(썸네일) 추출.
+### 현재 베타 목표
+
+- 사용자가 앱을 바로 이해하고 **save-to-map 플로우를 원하는지** 검증하는 것.
+- MVP는 **붙여넣기 → 확인 → 지도에 저장 → 정리**에만 집중한다.
+
+### 아직 만들지 않는 것 (Do not build yet)
+
+- 릴스/틱톡 **영상에서 장소 추측** (video place guessing)
+- 분위기/인테리어 기반 **AI 비전·지오로케이션**
+- 실시간 협업 (real-time collaboration)
+- 선물 추천 (gift recommendation)
+- 복잡한 일정/플래닝 기능
+
+### 다음 실제 우선순위
+
+1. **Supabase 영속화 + 실제 공유 링크** — `supabase/schema.sql` 실행 후
+   `lib/storage.ts` 내부를 Supabase 호출로 교체. 이 시점에
+   `/lists/share/[shareId]`가 기기 간 실제 공유 링크로 동작.
+2. **실제 지도 provider + 실좌표** — `MockMap`(MapViewProps 인터페이스)과
+   `lib/mockMap.ts`를 Mapbox/Google/MapKit 뷰 + 좌표 투영으로 교체.
+3. **URL 메타데이터/이름 자동 채움** — **지도 링크부터** 시작
+   (Google/Naver/Kakao 링크는 이름 추출이 안정적), 소셜 링크는 그다음.
+4. **실제 장소 검색/지오코딩** — 지도 provider 도입과 함께.
+5. **Google/Naver/Kakao 저장 리스트 import** — API 접근이 허용하는 범위에서.
+6. **(나중에) 사용자 보조 방식의 릴스/틱톡 장소 후보 추출**:
+   - 캡션을 붙여넣거나 스크린샷을 업로드하면
+   - 텍스트에서 장소 이름 후보를 추출해
+   - **후보 2~3개를 보여주고 사용자가 확정**한다
+   - 분위기만으로 확신에 찬 추측은 **절대 하지 않는다**
+     (스크래핑 금지, "We found the place" 금지 — 항상 후보 + 수동 입력 폴백)
