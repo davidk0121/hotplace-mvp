@@ -137,12 +137,14 @@ export default function MapLibreView({
       userMarkerRef.current = null;
       return;
     }
+    // setLngLat 먼저, 그다음 addTo — 순서가 바뀌면 maplibre가 _lngLat를 읽다 크래시한다
     if (!userMarkerRef.current) {
-      userMarkerRef.current = new maplibregl.Marker({ element: buildUserEl() }).addTo(
-        map
-      );
+      userMarkerRef.current = new maplibregl.Marker({ element: buildUserEl() })
+        .setLngLat([userLocation.lng, userLocation.lat])
+        .addTo(map);
+    } else {
+      userMarkerRef.current.setLngLat([userLocation.lng, userLocation.lat]);
     }
-    userMarkerRef.current.setLngLat([userLocation.lng, userLocation.lat]);
   }, [userLocation, ready]);
 
   // 중심 이동 (지역칩/내 위치)
