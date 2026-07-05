@@ -39,49 +39,64 @@ export interface NearbyPlace {
   region: string;
   category: Category;
   note: string;
+  // 정적으로 알려진 실좌표 — 저장 시 실제 지도 핀으로 찍힌다.
+  lat: number;
+  lng: number;
 }
+
+/** 지역칩 선택 시 실제 지도를 대략 이 좌표로 이동시킨다. */
+export const AREA_CENTERS: Record<AreaKey, { lat: number; lng: number }> = {
+  la: { lat: 34.0522, lng: -118.2437 },
+  oc: { lat: 33.7175, lng: -117.8311 },
+  seoul: { lat: 37.5665, lng: 126.978 },
+  seongsu: { lat: 37.5445, lng: 127.056 },
+  hongdae: { lat: 37.5561, lng: 126.9236 },
+  gangnam: { lat: 37.4979, lng: 127.0276 },
+  jeju: { lat: 33.4996, lng: 126.5312 },
+  busan: { lat: 35.1796, lng: 129.0756 },
+};
 
 // 지역별 큐레이션 mock (US + 한국). 실제 API 연동 시 이 상수는 제거.
 const MOCK_BY_AREA: Record<AreaKey, NearbyPlace[]> = {
   la: [
-    { name: "Grand Central Market", region: "DTLA", category: "food", note: "Historic food hall" },
-    { name: "Griffith Observatory", region: "Los Feliz", category: "date", note: "Sunset city views" },
-    { name: "Salt & Straw", region: "Larchmont", category: "cafe", note: "Small-batch ice cream" },
+    { name: "Grand Central Market", region: "DTLA", category: "food", note: "Historic food hall", lat: 34.0506, lng: -118.2487 },
+    { name: "Griffith Observatory", region: "Los Feliz", category: "date", note: "Sunset city views", lat: 34.1184, lng: -118.3004 },
+    { name: "Salt & Straw", region: "Larchmont", category: "cafe", note: "Small-batch ice cream", lat: 34.0746, lng: -118.3247 },
   ],
   oc: [
-    { name: "The LAB Anti-Mall", region: "Costa Mesa", category: "shopping", note: "Indie shops & patios" },
-    { name: "Laguna Beach", region: "Laguna", category: "date", note: "Coves & coastal walk" },
-    { name: "Kéan Coffee", region: "Newport Beach", category: "cafe", note: "Local roaster" },
+    { name: "The LAB Anti-Mall", region: "Costa Mesa", category: "shopping", note: "Indie shops & patios", lat: 33.6905, lng: -117.9088 },
+    { name: "Laguna Beach", region: "Laguna", category: "date", note: "Coves & coastal walk", lat: 33.5427, lng: -117.7854 },
+    { name: "Kéan Coffee", region: "Newport Beach", category: "cafe", note: "Local roaster", lat: 33.6189, lng: -117.9298 },
   ],
   seoul: [
-    { name: "Gwangjang Market", region: "Jongno", category: "food", note: "Bindaetteok & mayak gimbap" },
-    { name: "N Seoul Tower", region: "Yongsan", category: "date", note: "City-view landmark" },
-    { name: "Ikseon-dong Hanok Street", region: "Jongno", category: "cafe", note: "Hanok cafes & alleys" },
+    { name: "Gwangjang Market", region: "Jongno", category: "food", note: "Bindaetteok & mayak gimbap", lat: 37.57, lng: 126.9997 },
+    { name: "N Seoul Tower", region: "Yongsan", category: "date", note: "City-view landmark", lat: 37.5512, lng: 126.9882 },
+    { name: "Ikseon-dong Hanok Street", region: "Jongno", category: "cafe", note: "Hanok cafes & alleys", lat: 37.5745, lng: 126.991 },
   ],
   seongsu: [
-    { name: "Onion Seongsu", region: "Seongsu", category: "cafe", note: "Industrial bakery cafe" },
-    { name: "Daelim Changgo", region: "Seongsu", category: "cafe", note: "Warehouse gallery cafe" },
-    { name: "Seongsu Yeonbang", region: "Seongsu", category: "shopping", note: "Select shops & pop-ups" },
+    { name: "Onion Seongsu", region: "Seongsu", category: "cafe", note: "Industrial bakery cafe", lat: 37.5445, lng: 127.0557 },
+    { name: "Daelim Changgo", region: "Seongsu", category: "cafe", note: "Warehouse gallery cafe", lat: 37.5417, lng: 127.0565 },
+    { name: "Seongsu Yeonbang", region: "Seongsu", category: "shopping", note: "Select shops & pop-ups", lat: 37.5443, lng: 127.0546 },
   ],
   hongdae: [
-    { name: "Hongdae Walking Street", region: "Mapo", category: "shopping", note: "Street performances & shops" },
-    { name: "Gyeongui Line Book Street", region: "Mapo", category: "date", note: "Leafy walk & benches" },
-    { name: "Zapangi Cafe", region: "Mapo", category: "cafe", note: "Pink vending-machine door" },
+    { name: "Hongdae Walking Street", region: "Mapo", category: "shopping", note: "Street performances & shops", lat: 37.5556, lng: 126.923 },
+    { name: "Gyeongui Line Book Street", region: "Mapo", category: "date", note: "Leafy walk & benches", lat: 37.5578, lng: 126.925 },
+    { name: "Zapangi Cafe", region: "Mapo", category: "cafe", note: "Pink vending-machine door", lat: 37.5636, lng: 126.911 },
   ],
   gangnam: [
-    { name: "Garosu-gil", region: "Gangnam", category: "shopping", note: "Tree-lined boutiques" },
-    { name: "Bongeunsa Temple", region: "Gangnam", category: "date", note: "Temple beside COEX" },
-    { name: "Mingles", region: "Gangnam", category: "food", note: "Modern Korean fine dining" },
+    { name: "Garosu-gil", region: "Gangnam", category: "shopping", note: "Tree-lined boutiques", lat: 37.5203, lng: 127.023 },
+    { name: "Bongeunsa Temple", region: "Gangnam", category: "date", note: "Temple beside COEX", lat: 37.515, lng: 127.0577 },
+    { name: "Mingles", region: "Gangnam", category: "food", note: "Modern Korean fine dining", lat: 37.5254, lng: 127.04 },
   ],
   jeju: [
-    { name: "Seongsan Ilchulbong", region: "Jeju", category: "travel", note: "Sunrise peak (UNESCO)" },
-    { name: "Woljeongri Beach", region: "Jeju", category: "date", note: "Beachfront cafes" },
-    { name: "Osulloc Tea Museum", region: "Jeju", category: "cafe", note: "Green-tea fields & cafe" },
+    { name: "Seongsan Ilchulbong", region: "Jeju", category: "travel", note: "Sunrise peak (UNESCO)", lat: 33.4581, lng: 126.9425 },
+    { name: "Woljeongri Beach", region: "Jeju", category: "date", note: "Beachfront cafes", lat: 33.5563, lng: 126.7955 },
+    { name: "Osulloc Tea Museum", region: "Jeju", category: "cafe", note: "Green-tea fields & cafe", lat: 33.3055, lng: 126.2897 },
   ],
   busan: [
-    { name: "Gamcheon Culture Village", region: "Busan", category: "travel", note: "Colorful hillside village" },
-    { name: "Haeundae Beach", region: "Busan", category: "date", note: "Iconic city beach" },
-    { name: "Jagalchi Market", region: "Busan", category: "food", note: "Fresh seafood market" },
+    { name: "Gamcheon Culture Village", region: "Busan", category: "travel", note: "Colorful hillside village", lat: 35.0975, lng: 129.0107 },
+    { name: "Haeundae Beach", region: "Busan", category: "date", note: "Iconic city beach", lat: 35.1587, lng: 129.1604 },
+    { name: "Jagalchi Market", region: "Busan", category: "food", note: "Fresh seafood market", lat: 35.0967, lng: 129.0304 },
   ],
 };
 

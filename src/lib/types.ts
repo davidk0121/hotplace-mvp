@@ -18,6 +18,13 @@ export interface Place {
   memo: string;
   /** 사용자가 처음 붙여넣은 원본 텍스트 또는 지도 링크 */
   originalInput: string;
+  /**
+   * 실좌표 (MapTiler geocoding으로 확정 시 저장). 없을 수 있다 —
+   * 좌표 없는 장소는 목록엔 나오지만 실제 지도에 핀으로 찍히지 않는다.
+   * (localStorage 하위 호환: 기존 장소는 lat/lng가 undefined)
+   */
+  lat?: number;
+  lng?: number;
   createdAt: string;
   updatedAt: string;
 }

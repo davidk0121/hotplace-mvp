@@ -116,35 +116,57 @@ export default function QuickSave({ onSaved, onViewOnMap }: QuickSaveProps) {
 
             {phase === "saved" && savedPlace && (
               <div className="text-center">
-                {/* 컬렉션이 없으면 빈 목록 대신 바로 만들기 화면으로 보낸다 */}
-                <div className="animate-pop mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-2xl">
-                  ✓
-                </div>
-                <p className="mt-3 font-bold text-card-foreground">
-                  {t.quickSave.savedTitle}
-                </p>
-                <p className="mt-0.5 text-sm text-muted-foreground">
-                  {t.quickSave.savedBody(savedPlace.name)}
-                </p>
-                <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-                  <button
-                    onClick={() => {
-                      onViewOnMap?.(savedPlace);
-                      reset();
-                    }}
-                    className="flex-1 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
-                  >
-                    📍 {t.quickSave.viewOnMap}
-                  </button>
-                  <Link
-                    href={listsRepo.list().length > 0 ? "/lists" : "/lists/new"}
-                    className="flex-1 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-                  >
-                    {listsRepo.list().length > 0
-                      ? t.quickSave.addToList
-                      : t.quickSave.makeList}
-                  </Link>
-                </div>
+                {/* 좌표 유무로 저장 완료 문구/CTA 분기 */}
+                {(() => {
+                  const hasCoords =
+                    typeof savedPlace.lat === "number" &&
+                    typeof savedPlace.lng === "number";
+                  return (
+                    <>
+                      <div className="animate-pop mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-2xl">
+                        {hasCoords ? "✓" : "📍"}
+                      </div>
+                      <p className="mt-3 font-bold text-card-foreground">
+                        {hasCoords
+                          ? t.quickSave.savedTitle
+                          : t.quickSave.savedNoLocTitle}
+                      </p>
+                      <p className="mt-0.5 text-sm text-muted-foreground">
+                        {hasCoords
+                          ? t.quickSave.savedBody(savedPlace.name)
+                          : t.quickSave.savedNoLocBody}
+                      </p>
+                      <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+                        {hasCoords ? (
+                          <button
+                            onClick={() => {
+                              onViewOnMap?.(savedPlace);
+                              reset();
+                            }}
+                            className="tap flex-1 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
+                          >
+                            📍 {t.quickSave.viewOnMap}
+                          </button>
+                        ) : (
+                          <Link
+                            href={`/places/${savedPlace.id}/edit`}
+                            className="tap flex-1 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
+                          >
+                            {t.form.findLocation}
+                          </Link>
+                        )}
+                        <Link
+                          href={listsRepo.list().length > 0 ? "/lists" : "/lists/new"}
+                          className="tap flex-1 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
+                        >
+                          {listsRepo.list().length > 0
+                            ? t.quickSave.addToList
+                            : t.quickSave.makeList}
+                        </Link>
+                      </div>
+                    </>
+                  );
+                })()}
                 <button
                   onClick={reset}
                   className="mt-3 text-sm font-semibold text-primary hover:underline"

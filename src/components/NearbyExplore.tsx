@@ -37,6 +37,8 @@ export default function NearbyExplore({ mode, onSaved }: NearbyExploreProps) {
       category: p.category,
       memo: p.note,
       originalInput: p.name,
+      lat: p.lat,
+      lng: p.lng,
     });
     setSavedKeys((prev) => new Set(prev).add(keyOf(p)));
     onSaved?.(place);

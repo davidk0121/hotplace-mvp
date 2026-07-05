@@ -140,6 +140,15 @@
   .animate-fade {
     animation: hp-fade 0.2s ease-out;
   }
+
+  /* 실제 지도 위 사용자 위치 마커 펄스 (MapLibre 마커는 인라인 style로 참조) */
+  @keyframes hp-ping {
+    75%,
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
 }
 
 /* 접근성: 모션 최소화 설정 존중 */

@@ -24,6 +24,8 @@ export interface MapViewProps {
   selectedPlaceId: string | null;
   /** 사용자의 현재 위치 (Geolocation 성공 시). mock에서는 중앙 blue dot으로 표시 */
   userLocation: { lat: number; lng: number } | null;
+  /** 지도를 이동시킬 중심 좌표 (지역칩/내 위치). 실제 지도만 사용, MockMap은 무시 */
+  center?: { lat: number; lng: number } | null;
   mapMode: MapMode;
   locating?: boolean;
   onSelectPlace: (id: string | null) => void;

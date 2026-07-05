@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import QuickSave from "@/components/QuickSave";
 import NearbyExplore from "@/components/NearbyExplore";
@@ -9,7 +10,8 @@ import ListCard from "@/components/ListCard";
 import SaveFromAnywhere from "@/components/SaveFromAnywhere";
 import Footer from "@/components/Footer";
 import { categoryEmoji } from "@/lib/constants";
-import { AREA_KEYS, AreaKey } from "@/lib/nearby";
+import { AREA_CENTERS, AREA_KEYS, AreaKey } from "@/lib/nearby";
+import { hasMapKey } from "@/lib/maptiler";
 import { listsRepo, placesRepo } from "@/lib/storage";
 import { Place, PlaceList } from "@/lib/types";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -19,6 +21,13 @@ type GeoStatus = "idle" | "locating" | "active" | "denied" | "unavailable";
 
 // 바텀시트 collapsed 상태에서 보이는 peek(헤더) 높이
 const PEEK = 76;
+
+// MapTiler 키가 있으면 실제 지도(MapLibre), 없으면 목업 지도로 폴백.
+// MapLibre는 클라이언트 전용이라 ssr:false로 지연 로드한다.
+const MapLibreView = dynamic(() => import("@/components/MapLibreView"), {
+  ssr: false,
+});
+const HAS_MAP_KEY = hasMapKey();
 
 export default function Home() {
   const { t } = useI18n();
@@ -98,6 +107,11 @@ export default function Home() {
       : geoStatus === "unavailable"
       ? t.nearby.unavailable
       : null;
+
+  // 지도 중심: 내 위치 모드면 사용자 좌표, 지역 모드면 지역 중심
+  const center =
+    mode === "nearme" ? userLocation : AREA_CENTERS[mode] ?? null;
+  const MapComp = HAS_MAP_KEY ? MapLibreView : MockMap;
 
   const recent = [...places]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
@@ -185,14 +199,15 @@ export default function Home() {
     <div className="relative h-[calc(100dvh-3.5rem-5rem)] overflow-hidden sm:h-[calc(100dvh-3.5rem)]">
       <h1 className="sr-only">{t.home.title}</h1>
 
-      {/* 배경 지도 (전체) */}
-      <MockMap
+      {/* 배경 지도 (실제 MapLibre 또는 목업 폴백) */}
+      <MapComp
         bleed
         contentInset={PEEK + 12}
         className="absolute inset-0 h-full w-full"
         places={places}
         selectedPlaceId={selectedId}
         userLocation={userLocation}
+        center={center}
         mapMode={mapMode}
         locating={locating}
         onSelectPlace={setSelectedId}
